@@ -5,6 +5,11 @@ from twilio.twiml.messaging_response import MessagingResponse
 app = Flask(__name__)
 app.secret_key='ayush'
 
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+
 @app.route("/")
 def hello():
     return "Hello, World!"
@@ -24,7 +29,7 @@ def sms_reply():
     # Create reply
     resp = MessagingResponse()
 
-    session.permanent = True
+    # session.permanent = True
     if(msg=='69'):
         resp.message("Session is {}".format(num))
     else:
