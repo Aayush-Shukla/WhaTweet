@@ -15,9 +15,11 @@ num=0
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
     # Fetch the message
+    global num
     session['phone_no']=request.form.get('From')
     msg = request.form.get('Body')
     if(msg=='*'):
+
         num=10
     # Create reply
     resp = MessagingResponse()
