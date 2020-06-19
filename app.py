@@ -13,13 +13,13 @@ def hello():
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
     # Fetch the message
-    session['phone_no'] = 'admin'
+    session['phone_no'] = ''
     msg = request.form.get('Body')
     if(msg=='*'):
         session['phone_no']=request.form.get('From')
     # Create reply
     resp = MessagingResponse()
-    if(msg=='69'):
+    if(msg==69):
         resp.message("Session is {}".format(session['phone_no']))
     else:
 
