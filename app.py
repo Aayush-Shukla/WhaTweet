@@ -19,7 +19,7 @@ def sms_reply():
         session['phone_no']=request.form.get('From')
     # Create reply
     resp = MessagingResponse()
-    if(msg==69):
+    if(msg=='69'):
         resp.message("Session is {}".format(session['phone_no']))
     else:
 
