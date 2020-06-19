@@ -58,7 +58,7 @@ def sms_reply():
             auth.get_access_token(verifier)
             login=1
         except tweepy.TweepError:
-            resp.message('Error! Failed to get access token.'))
+            resp.message('Error! Failed to get access token.')
             login=0
 
             key = auth.access_token
