@@ -8,6 +8,8 @@ app.secret_key='ayush'
 @app.route("/")
 def hello():
     return "Hello, World!"
+num=0
+
 
 @app.route("/sms", methods=['POST'])
 def sms_reply():
@@ -15,7 +17,6 @@ def sms_reply():
     # Fetch the message
     session['phone_no']=request.form.get('From')
     msg = request.form.get('Body')
-    num=0
     if(msg=='*'):
         num=10
     # Create reply
