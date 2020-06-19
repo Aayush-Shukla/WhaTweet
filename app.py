@@ -49,7 +49,7 @@ def sms_reply():
             token = auth.request_token['oauth_token']
             verifier = msg
             ver=1
-        lvl=1
+            lvl=1
 
     if ver==1:
         auth.request_token = {'oauth_token': token,
@@ -58,7 +58,7 @@ def sms_reply():
             auth.get_access_token(verifier)
             login=1
         except tweepy.TweepError:
-            print('Error! Failed to get access token.')
+            resp.message('Error! Failed to get access token.'))
             login=0
 
             key = auth.access_token
@@ -77,11 +77,11 @@ def sms_reply():
     # Create reply
 
     # session.permanent = True
-    if(msg=='69'):
-        resp.message("Session is {}".format(num))
-    else:
-
-        resp.message("You said: {} ".format(msg))
+    # if(msg=='69'):
+    #     resp.message("Session is {}".format(num))
+    # else:
+    #
+    #     resp.message("You said: {} ".format(msg))
 
     return str(resp)
 
