@@ -23,6 +23,8 @@ def sms_reply():
         num=10
     # Create reply
     resp = MessagingResponse()
+
+    session.permanent = True
     if(msg=='69'):
         resp.message("Session is {}".format(num))
     else:
