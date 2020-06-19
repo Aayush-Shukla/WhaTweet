@@ -48,6 +48,8 @@ def sms_reply():
         else:
             token = auth.request_token['oauth_token']
             verifier = msg
+            resp.message("Verifier code :".format(verifier))
+
             ver=1
             lvl=1
 
@@ -61,6 +63,8 @@ def sms_reply():
             resp.message('Error! Failed to get access token.')
             login=0
 
+            resp.message("login:".format(login))
+
             key = auth.access_token
             secret = auth.access_token_secret
 
@@ -69,7 +73,7 @@ def sms_reply():
 
 
     if login==1:
-        pi = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+        api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
 
         resp.message("Hi, {}".format(user.screen_name))
