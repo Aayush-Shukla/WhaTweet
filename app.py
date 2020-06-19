@@ -4,6 +4,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 app.secret_key='ayush'
+num=0
 
 
 @app.before_request
@@ -13,7 +14,6 @@ def make_session_permanent():
 @app.route("/")
 def hello():
     return "Hello, World!"
-num=0
 
 
 @app.route("/sms", methods=['POST'])
