@@ -23,6 +23,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Colors" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -38,6 +39,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="456" y="157" key="SettingsEditor" timestamp="1592559528027">
+      <screen x="0" y="0" width="1920" height="1043" />
+    </state>
+    <state x="456" y="157" key="SettingsEditor/0.0.1920.1043@0.0.1920.1043" timestamp="1592559528027" />
     <state x="639" y="348" key="com.intellij.ide.util.TipDialog" timestamp="1592532225940">
       <screen x="0" y="0" width="1920" height="1043" />
     </state>
