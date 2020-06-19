@@ -3,6 +3,7 @@ from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
+app.secret_key='ayush'
 
 @app.route("/")
 def hello():
