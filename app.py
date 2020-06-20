@@ -61,6 +61,9 @@ def sms_reply():
             login=1
         except tweepy.TweepError:
             resp.message('Error! Failed to get access token.')
+            lvl=0
+            ver=0
+            counter=0
             login=0
 
             resp.message("login:".format(login))
