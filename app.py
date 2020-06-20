@@ -18,6 +18,7 @@ lvl=0
 ver=0
 counter=0
 login=0
+init=0
 auth=tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl','lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
 @app.before_request
@@ -33,7 +34,10 @@ def hello():
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
     # Fetch the message
-    session['phone_no']=request.form.get('From')
+    global init
+    if init==0:
+        session['phone_no']=request.form.get('From')
+        init=1
 
     token=''
     global lvl
