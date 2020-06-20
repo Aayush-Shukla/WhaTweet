@@ -33,6 +33,7 @@ def hello():
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
     # Fetch the message
+    token=''
     global lvl
     global counter
     global ver
