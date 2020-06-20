@@ -33,6 +33,8 @@ def hello():
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
     # Fetch the message
+    session['phone_no']=request.form.get('From')
+
     token=''
     global lvl
     global counter
@@ -41,7 +43,6 @@ def sms_reply():
     resp = MessagingResponse()
     resp.message("{}{}{}{}".format(num,ver,counter,login))
 
-    session['phone_no']=request.form.get('From')
     msg = request.form.get('Body')
     if lvl==0:
         if counter==0:
