@@ -45,9 +45,9 @@ def sms_reply():
     global ver
     global login
     resp = MessagingResponse()
-    resp.message("{}{}{}{}".format(num,ver,counter,login))
-
+    resp.message("{}{}{}{}{}{}".format(num,ver,counter,login,init,session['phone_no']))
     msg = request.form.get('Body')
+
     if lvl==0:
         if counter==0:
             resp.message("Hi there. Login to Twitter here. {} And send the code".format(auth.get_authorization_url()))
