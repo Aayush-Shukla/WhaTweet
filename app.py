@@ -38,6 +38,7 @@ def sms_reply():
     global ver
     global login
     resp = MessagingResponse()
+    resp.message("{}{}{}{}".format(num,ver,counter,login))
 
     session['phone_no']=request.form.get('From')
     msg = request.form.get('Body')
@@ -90,7 +91,6 @@ def sms_reply():
     # else:
     #
     #     resp.message("You said: {} ".format(msg))
-    resp.message(num,ver,counter,login)
     return str(resp)
 
 if __name__ == "__main__":
