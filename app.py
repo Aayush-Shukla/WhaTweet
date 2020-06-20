@@ -52,6 +52,7 @@ def sms_reply():
         if counter==0:
             resp.message("Hi there. Login to Twitter here. {} And send the code".format(auth.get_authorization_url()))
             counter=1
+            resp.message("{}".format(counter))
         else:
             token = auth.request_token['oauth_token']
             verifier = msg
