@@ -76,7 +76,8 @@ def sms_reply():
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
 
-        resp.message("Hi, {}".format(user.screen_name))
+        resp.message.body("Hi, {} ({})\n What would you like to do?\n1. Make Tweet\n".format(user.name,user.screen_name))
+        resp.message.media("https://twitter.com/{}/photo".format(user.screen_name))
 
     # Create reply
 
