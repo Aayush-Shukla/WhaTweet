@@ -13,17 +13,17 @@ from click._compat import raw_input
 
 app = Flask(__name__)
 app.secret_key='ayush'
-num=0
-lvl=0
-ver=0
-counter=0
-login=0
-init=0
-auth=tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl','lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
+# num=0
+# lvl=0
+# ver=0
+# counter=0
+# login=0
+# init=0
+# auth=tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl','lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
+# @app.before_request
+# def make_session_permanent():
+#     session.permanent = True
 
 @app.route("/")
 def hello():
@@ -92,7 +92,7 @@ def sms_reply():
 
     # Create reply
 
-    session.permanent = True
+    # session.permanent = True
     if(msg=='69'):
         resp.message("Session is {}".format(num))
     else:
