@@ -90,7 +90,7 @@ def sms_reply():
     # else:
     #
     #     resp.message("You said: {} ".format(msg))
-
+    resp.message(num,ver,counter,login)
     return str(resp)
 
 if __name__ == "__main__":
