@@ -76,6 +76,7 @@ def sms_reply():
     global request
     global tweet
     global media
+    global user
     global medianum
     global filename
     filename = 'temp.jpg'
@@ -162,7 +163,30 @@ def sms_reply():
         sublvl=0
         login=0
 
+    if lvl == 6:
+        print(api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following)
 
+        if (api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following):
+            api.destroy_friendship(msg)
+            resp.message('Unfollowed {}'.format(msg))
+        else:
+            api.create_friendship(msg)
+            resp.message('Followed {}'.format(msg))
+        lvl = 3
+
+    if lvl == 5:
+        media = request.form.get('MediaUrl0')
+        medianum = request.form.get('NumMedia')
+        if medianum != '0':
+            r = requests.get(media, stream=True)
+            if r.status_code == 200:
+                with open(filename, 'wb') as image:
+                    for chunk in r:
+                        image.write(chunk)
+
+            api.update_profile_image(filename)
+            resp.message("DONE !")
+            lvl = 3
 
     if lvl == 1:
         token = auth.request_token['oauth_token']
@@ -187,6 +211,7 @@ def sms_reply():
 
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
+            lvl=0
 
             # lvl=0
             # lvl=0
@@ -205,8 +230,7 @@ def sms_reply():
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
         resp.message(
-            "yo, {} ({})\n--------------\n What would you like to do? \n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture".format(user.name,
-                                                                                                             user.screen_name))
+            "yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle".format(user.name, user.screen_name,user.friends_count,user.followers_count))
         lvl = 4
 
     if lvl == 4:
@@ -297,8 +321,11 @@ def sms_reply():
             trending = api.trends_place(23424848)
             trendss=''
 
-            for i in range(10):
-                trendss+="{}. {} ({})\n".format(i + 1, trending[0]['trends'][i]['name'], trending[0]['trends'][i]['tweet_volume'])
+            for i in range(20):
+                if trending[0]['trends'][i]['tweet_volume']!=None:
+                    trendss+="{}. {} ... ({})\n".format(i + 1, trending[0]['trends'][i]['name'], trending[0]['trends'][i]['tweet_volume'])
+                else:
+                    trendss+="{}. {} \n".format(i + 1, trending[0]['trends'][i]['name'])
 
                 # print(trending[0]['trends'][i])
             resp.message("{}".format(trendss))
@@ -310,26 +337,21 @@ def sms_reply():
             resp.message("Send a photo to update your Profile Picture")
             lvl=5
 
-    if lvl==5:
-        media = request.form.get('MediaUrl0')
-        medianum = request.form.get('NumMedia')
-        if medianum!='0':
-            r = requests.get(media, stream=True)
-            if r.status_code == 200:
-                with open(filename, 'wb') as image:
-                    for chunk in r:
-                        image.write(chunk)
 
-            api.update_profile_image(filename)
-            resp.message("DONE !")
-            lvl=3
+
+
+        if (msg=='4' and sublvl ==0):
+            resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
+            lvl=6
+
+
 
     if lvl == 0:
 
         # if counter==0:
         # print("Hi there. Login to Twitter here. {} And send the code".format(auth.get_authorization_url()))
         # counter=1
-        t=resp.message(" Hi there. Login to Twitter here. {} And send the code".format(auth.get_authorization_url()))
+        t=resp.message(" Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
 
 

@@ -4,6 +4,8 @@
     <list default="true" id="f19aff5e-6cd3-4ce0-9a56-0d58ecfa30f4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,27 +42,33 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="418" y="217" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1592883935378">
+      <screen x="0" y="36" width="1920" height="1044" />
+    </state>
+    <state x="418" y="217" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.36.1920.1044@0.36.1920.1044" timestamp="1592883935378" />
+    <state x="594" y="145" width="725" height="827" key="CommitChangelistDialog2" timestamp="1592893224558">
+      <screen x="0" y="36" width="1920" height="1044" />
+    </state>
+    <state x="594" y="145" width="725" height="827" key="CommitChangelistDialog2/0.36.1920.1044@0.36.1920.1044" timestamp="1592893224558" />
     <state x="456" y="157" key="SettingsEditor" timestamp="1592559528027">
       <screen x="0" y="0" width="1920" height="1043" />
     </state>
     <state x="456" y="157" key="SettingsEditor/0.0.1920.1043@0.0.1920.1043" timestamp="1592559528027" />
+    <state x="555" y="295" width="804" height="528" key="Vcs.Push.Dialog.v2" timestamp="1592883958462">
+      <screen x="0" y="36" width="1920" height="1044" />
+    </state>
+    <state x="555" y="295" width="804" height="528" key="Vcs.Push.Dialog.v2/0.36.1920.1044@0.36.1920.1044" timestamp="1592883958462" />
     <state x="639" y="348" key="com.intellij.ide.util.TipDialog" timestamp="1592532225940">
       <screen x="0" y="0" width="1920" height="1043" />
     </state>
     <state x="639" y="348" key="com.intellij.ide.util.TipDialog/0.0.1920.1043@0.0.1920.1043" timestamp="1592532225940" />
+    <state x="752" y="479" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1592893216293">
+      <screen x="0" y="36" width="1920" height="1044" />
+    </state>
+    <state x="752" y="479" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.36.1920.1044@0.36.1920.1044" timestamp="1592893216293" />
     <state x="623" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1592611152295">
       <screen x="0" y="0" width="1920" height="1043" />
     </state>
     <state x="623" y="230" width="672" height="678" key="search.everywhere.popup/0.0.1920.1043@0.0.1920.1043" timestamp="1592611152295" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/twitter.py</url>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
