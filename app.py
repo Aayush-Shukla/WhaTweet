@@ -126,6 +126,10 @@ def sms_reply():
 
 
 
+    if(msg=='**'):
+        session.clear()
+
+
 
     if lvl == 1:
         token = auth.request_token['oauth_token']
@@ -144,13 +148,14 @@ def sms_reply():
         auth.request_token = {'oauth_token': token,
                               'oauth_token_secret': verifier}
         try:
+
             auth.get_access_token(verifier)
             lvl = 3
 
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
 
-            lvl=0
+            # lvl=0
             # lvl=0
             # ver=0
             # counter=0
