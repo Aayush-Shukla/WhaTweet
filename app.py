@@ -52,6 +52,7 @@ def sms_reply():
     global tweet
     global media
     global medianum
+    global filename
     if init==0:
         session['phone_no']=request.form.get('From')
         init=1
@@ -148,7 +149,8 @@ def sms_reply():
 
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
-            # lvl=0
+
+            lvl=0
             # lvl=0
             # ver=0
             # counter=0
@@ -201,29 +203,49 @@ def sms_reply():
                 resp.message("are you sure ? (y/n)?")
                 confirm = 1
             else:
-                if(medianum!=0):
-                    filename = 'temp.jpg'
-                    request = requests.get(media, stream=True)
-                    if request.status_code == 200:
-                        with open(filename, 'wb') as image:
-                            for chunk in request:
-                                image.write(chunk)
 
+            #
 
 
                 if (msg == 'y'):
+
+                    if (medianum != '0'):
+                        filename = 'temp.jpg'
+                        request = requests.get(media, stream=True)
+                        if request.status_code == 200:
+                            with open(filename, 'wb') as image:
+                                for chunk in request:
+                                    image.write(chunk)
+
+
+
+
+
                     for i in tweet:
-                        if (medianum != 0):
+
+                        # api.update_with_media('temp2.jpg', status=i)
+
+
+
+
+                        if (medianum !='0'):
 
                             api.update_with_media(filename,status=i)
                         else:
                             api.update_status(i)
+
+
                     resp.message("done")
                     sublvl = 0
                     confirm = 0
                     lvl = 3
-                    # if (medianum != 0):
-                    #     os.remove(filename)
+
+
+
+                    if (medianum !='0'):
+                        os.remove(filename)
+
+
 
 
         if (msg == '1' and sublvl == 0):
