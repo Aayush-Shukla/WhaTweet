@@ -1,10 +1,11 @@
-
+import file as file
 from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
 
 import tweepy
 import os
 import requests
+import urllib.request
 
 import time
 
@@ -33,6 +34,30 @@ def hello():
     return "Hello, World!"
 
 
+
+
+
+
+def download_photo(img_url, filename):
+    try:
+        image_on_web = urllib.urlopen(img_url)
+        if image_on_web.headers.maintype == 'image':
+            buf = image_on_web.read()
+            path = os.getcwd()
+            file_path = "%s/%s" % (path, filename)
+            downloaded_image = file(file_path, "wb")
+            downloaded_image.write(buf)
+            downloaded_image.close()
+            image_on_web.close()
+        else:
+            return False
+    except:
+        return False
+    return True
+
+
+
+
 @app.route("/sms", methods=['POST'])
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
@@ -53,11 +78,15 @@ def sms_reply():
     global media
     global medianum
     global filename
+    filename = 'temp.jpg'
+
     if init==0:
         session['phone_no']=request.form.get('From')
         init=1
 
     token=''
+    if(os.path.isfile(filename)):
+        os.remove(filename)
     # global lvl
     # global counter
     # global ver
@@ -128,6 +157,10 @@ def sms_reply():
 
     if(msg=='**'):
         session.clear()
+        lvl=0
+        counter=0
+        sublvl=0
+        login=0
 
 
 
@@ -172,7 +205,7 @@ def sms_reply():
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
         resp.message(
-            "yo, {} ({})\n--------------\n What would you like to do? \n 1. Make Tweet\n 2. Trending".format(user.name,
+            "yo, {} ({})\n--------------\n What would you like to do? \n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture".format(user.name,
                                                                                                              user.screen_name))
         lvl = 4
 
@@ -215,13 +248,19 @@ def sms_reply():
                 if (msg == 'y'):
 
                     if (medianum != '0'):
-                        filename = 'temp.jpg'
-                        request = requests.get(media, stream=True)
-                        if request.status_code == 200:
-                            with open(filename, 'wb') as image:
-                                for chunk in request:
-                                    image.write(chunk)
 
+                        # filename = 'temp.jpg'
+                        # urllib.request.urlretrieve(media, filename)
+
+
+                        # urllib.request.u
+
+
+                        r = requests.get(media, stream=True)
+                        if r.status_code == 200:
+                            with open(filename, 'wb') as image:
+                                for chunk in r:
+                                    image.write(chunk)
 
 
 
@@ -247,9 +286,6 @@ def sms_reply():
 
 
 
-                    if (medianum !='0'):
-                        os.remove(filename)
-
 
 
 
@@ -271,11 +307,22 @@ def sms_reply():
             lvl = 3
 
         if (msg == '3' and sublvl == 0):
-            print(api.get_direct_message())
-            sublvl = 0
-            confirm = 0
-            lvl = 3
+            resp.message("Send a photo to update your Profile Picture")
+            lvl=5
 
+    if lvl==5:
+        media = request.form.get('MediaUrl0')
+        medianum = request.form.get('NumMedia')
+        if medianum!='0':
+            r = requests.get(media, stream=True)
+            if r.status_code == 200:
+                with open(filename, 'wb') as image:
+                    for chunk in r:
+                        image.write(chunk)
+
+            api.update_profile_image(filename)
+            resp.message("DONE !")
+            lvl=3
 
     if lvl == 0:
 
