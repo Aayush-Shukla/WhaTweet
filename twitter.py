@@ -1,3 +1,5 @@
+import re
+
 import tweepy
 import os
 
@@ -171,7 +173,15 @@ confirm=0
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 user = api.me()
-print(user)
+# print(api.user_timeline()[3])
+x=re.findall(r'(https?://[^\s]+)', api.user_timeline()[3].text)
+print(api.user_timeline()[3].text.replace(x[0],".{}.".format(x[0])))
+
+
+# for tweet in api.user_timeline():
+#     if tweet.in_reply_to_status_id==.favourite_CoutnNone:
+#         print(tweet.text,tweet.created_at.strftime("   (%b %d, %H:%M)"))
+
 
 
 

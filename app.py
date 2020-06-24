@@ -230,8 +230,18 @@ def sms_reply():
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
         resp.message(
-            "yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle".format(user.name, user.screen_name,user.friends_count,user.followers_count))
+            "yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(user.name, user.screen_name,user.friends_count,user.followers_count))
         lvl = 4
+
+
+
+
+
+
+
+
+
+
 
     if lvl == 4:
 
@@ -343,6 +353,19 @@ def sms_reply():
         if (msg=='4' and sublvl ==0):
             resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
             lvl=6
+
+        if (msg =='5' and sublvl==0):
+            timeline = ''
+            for tweet in api.user_timeline():
+
+                if tweet.in_reply_to_status_id == None:
+                    if(len(timeline)+len("{}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"),tweet.retweet_count,tweet.retweeted_status.favorite_count if tweet.retweeted==True else tweet.favorite_count))>1600):
+                        break
+                    timeline+="{}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"),tweet.retweet_count,tweet.retweeted_status.favorite_count if tweet.retweeted==True else tweet.favorite_count)
+
+            resp.message("{}".format(timeline))
+            print(resp.message("{}".format(timeline)))
+            lvl=3
 
 
 
