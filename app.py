@@ -1,3 +1,5 @@
+import re
+
 import file as file
 from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
@@ -356,15 +358,26 @@ def sms_reply():
 
         if (msg =='5' and sublvl==0):
             timeline = ''
+            timelinecount=1
             for tweet in api.user_timeline():
 
                 if tweet.in_reply_to_status_id == None:
-                    if(len(timeline)+len("{}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"),tweet.retweet_count,tweet.retweeted_status.favorite_count if tweet.retweeted==True else tweet.favorite_count))>1600):
-                        break
-                    timeline+="{}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"),tweet.retweet_count,tweet.retweeted_status.favorite_count if tweet.retweeted==True else tweet.favorite_count)
+                    stringtoadd="{}. {}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(timelinecount,tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"),tweet.retweet_count,tweet.retweeted_status.favorite_count if tweet.retweeted==True else tweet.favorite_count)
 
+                    x = re.findall(r'(https?://[^\s]+)', stringtoadd)
+                    print(x)
+                    if(len(x)!=0):
+                        stringtoadd=stringtoadd.replace(x[0], "\n{}".format(x[0]))
+
+
+
+
+                    if(len(timeline)+len(stringtoadd)>1600):
+                        break
+                    timeline+=stringtoadd
+                    timelinecount+=1
             resp.message("{}".format(timeline))
-            print(resp.message("{}".format(timeline)))
+            # print(resp.message("{}".format(timeline)))
             lvl=3
 
 
