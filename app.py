@@ -24,6 +24,7 @@ counter=0
 login=0
 init=0
 sublvl=0
+token=''
 confirm=0
 auth=tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl','lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
@@ -96,12 +97,12 @@ def sms_reply():
     global sublvl
     global confirm
     global verifier
-    global init
+    # global init
     global api
     global request
     global tweet
     global token
-    global verifier
+    # global verifier
     global media
     global user
     global medianum
@@ -112,7 +113,7 @@ def sms_reply():
         session['phone_no']=request.form.get('From')
         init=1
 
-    token=''
+
     if(os.path.isfile(filename)):
         os.remove(filename)
     # global lvl
@@ -214,7 +215,7 @@ def sms_reply():
 
             api.update_profile_image(filename)
             resp.message("DONE !")
-            lvl = 3
+        lvl = 3
 
     # if lvl == 1:
     #     token = auth.request_token['oauth_token']
