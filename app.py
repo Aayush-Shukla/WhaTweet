@@ -206,7 +206,7 @@ def sms_reply():
             resp.message('Followed {}'.format(msg))
         lvl = 3
 
-    if lvl == 5:
+    elif lvl == 5:
         media = request.form.get('MediaUrl0')
         medianum = request.form.get('NumMedia')
         if medianum != '0':
@@ -258,7 +258,7 @@ def sms_reply():
     #
     #     auth.set_access_token(key, secret)
 
-    if lvl == 3:
+    elif lvl == 3:
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
         resp.message(
@@ -275,7 +275,7 @@ def sms_reply():
 
 
 
-    if lvl == 4:
+    elif lvl == 4:
 
         if (sublvl == 1):
             media = request.form.get('MediaUrl0')
@@ -423,7 +423,7 @@ def sms_reply():
 
 
 
-    if lvl == 0:
+    elif lvl == 0:
 
         # if counter==0:
         # print("Hi there. Login to Twitter here. {} And send the code".format(auth.get_authorization_url()))
