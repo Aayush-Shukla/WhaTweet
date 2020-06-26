@@ -48,6 +48,7 @@ def hello():
 def auth_page():
     global lvl
     global token
+    global auth
     global verifier
     token= request.args.get('oauth_token')
     verifier= request.args.get('oauth_verifier')
@@ -100,6 +101,7 @@ def sms_reply():
     # global init
     global api
     global request
+    global auth
     global tweet
     global token
     # global verifier
