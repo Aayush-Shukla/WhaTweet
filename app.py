@@ -192,7 +192,6 @@ def sms_reply():
             lvl = 3
 
     if lvl == 1:
-        token = auth.request_token['oauth_token']
 
         verifier = msg
 
@@ -390,6 +389,8 @@ def sms_reply():
         # counter=1
         t=resp.message(" Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
+        token = auth.request_token['oauth_token']
+
 
 
         
