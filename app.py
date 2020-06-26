@@ -19,6 +19,7 @@ app = Flask(__name__)
 app.secret_key='ayush'
 # num=0
 lvl=0
+print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 ver=0
 counter=0
 login=0
