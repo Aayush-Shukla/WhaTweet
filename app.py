@@ -186,14 +186,14 @@ def sms_reply():
     #     resp.message("You said: {} ".format(msg))
 
 
-
-    if(msg=='**'):
-        session.clear()
-        lvl=0
-        init=0
-        counter=0
-        sublvl=0
-        login=0
+    #
+    # if msg=='**':
+    #     session.clear()
+    #     lvl=0
+    #     init=0
+    #     counter=0
+    #     sublvl=0
+    #     login=0
 
     if lvl == 6:
         print(api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following)
