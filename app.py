@@ -418,6 +418,10 @@ def sms_reply():
             lvl=3
 
 
+    else:
+        resp.message("Wrong choice")
+
+
 
     if lvl == 0:
 
