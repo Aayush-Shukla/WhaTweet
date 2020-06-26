@@ -28,9 +28,9 @@ sublvl=0
 confirm=0
 auth=tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl','lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
+# @app.before_request
+# def make_session_permanent():
+#     session.permanent = True
 
 @app.route("/")
 def hello():
@@ -111,9 +111,9 @@ def sms_reply():
     global filename
     filename = 'temp.jpg'
 
-    if init==0:
-        session['phone_no']=request.form.get('From')
-        init=1
+    # if init==0:
+    #     session['phone_no']=request.form.get('From')
+    #     init=1
 
 
     if(os.path.isfile(filename)):
