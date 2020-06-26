@@ -59,6 +59,45 @@ def download_photo(img_url, filename):
 
 
 
+@app.route("/auth",methods=['GET'])
+def auth_page():
+    global lvl
+    global token
+    global verifier
+    token= request.args.get('oauth_token')
+    verifier= request.args.get('oauth_verifier')
+    lvl=2
+    auth.request_token = {'oauth_token': token,
+                          'oauth_token_secret': verifier}
+    try:
+
+        auth.get_access_token(verifier)
+        lvl = 3
+
+    except tweepy.TweepError:
+        print('Error! Failed to get access token.')
+        # lvl=0
+
+        # lvl=0
+        # lvl=0
+        # ver=0
+        # counter=0
+        # login=0
+
+        # print("login:".format(login))
+
+    key = auth.access_token
+    secret = auth.access_token_secret
+
+    auth.set_access_token(key, secret)
+
+
+
+
+
+
+    return "Hey"
+
 
 @app.route("/sms", methods=['POST'])
 def sms_reply():
@@ -76,8 +115,9 @@ def sms_reply():
     global init
     global api
     global request
-    global token
     global tweet
+    global token
+    global verifier
     global media
     global user
     global medianum
@@ -192,42 +232,43 @@ def sms_reply():
             resp.message("DONE !")
             lvl = 3
 
-    if lvl == 1:
+    # if lvl == 1:
+    #     token = auth.request_token['oauth_token']
+    #
+    #     verifier = msg
+    #
+    #     print(verifier,"1")
+    #
+    #     # ver=1
+    #     lvl = 2
 
-        verifier = msg
 
-        print(verifier,"1")
-
-        # ver=1
-        lvl = 2
-
-
-    if lvl == 2:
-        print(verifier,"2")
-
-        auth.request_token = {'oauth_token': token,
-                              'oauth_token_secret': verifier}
-        try:
-
-            auth.get_access_token(verifier)
-            lvl = 3
-
-        except tweepy.TweepError:
-            print('Error! Failed to get access token.')
-            # lvl=0
-
-            # lvl=0
-            # lvl=0
-            # ver=0
-            # counter=0
-            # login=0
-
-            # print("login:".format(login))
-
-        key = auth.access_token
-        secret = auth.access_token_secret
-
-        auth.set_access_token(key, secret)
+    # if lvl == 2:
+    #     print(verifier,"2")
+    #
+    #     auth.request_token = {'oauth_token': token,
+    #                           'oauth_token_secret': verifier}
+    #     try:
+    #
+    #         auth.get_access_token(verifier)
+    #         lvl = 3
+    #
+    #     except tweepy.TweepError:
+    #         print('Error! Failed to get access token.')
+    #         # lvl=0
+    #
+    #         # lvl=0
+    #         # lvl=0
+    #         # ver=0
+    #         # counter=0
+    #         # login=0
+    #
+    #         # print("login:".format(login))
+    #
+    #     key = auth.access_token
+    #     secret = auth.access_token_secret
+    #
+    #     auth.set_access_token(key, secret)
 
     if lvl == 3:
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
@@ -390,8 +431,6 @@ def sms_reply():
         # counter=1
         t=resp.message(" Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
-        token = auth.request_token['oauth_token']
-
 
 
         
