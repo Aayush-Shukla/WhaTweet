@@ -76,6 +76,7 @@ def sms_reply():
     global init
     global api
     global request
+    global token
     global tweet
     global media
     global user
