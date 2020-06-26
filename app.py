@@ -121,7 +121,7 @@ def sms_reply():
     # global login
     resp = MessagingResponse()
     # print(request)
-    # print(request.form)
+    print(request.form)
     print("-------------------------------------------- >",lvl)
     # resp.message("{}{}{}{}{}{}".format(num,ver,counter,login,init,session['phone_no']))
     msg = request.form.get('Body')
