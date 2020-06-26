@@ -161,6 +161,7 @@ def sms_reply():
     if(msg=='**'):
         session.clear()
         lvl=0
+        init=0
         counter=0
         sublvl=0
         login=0
