@@ -420,7 +420,7 @@ def sms_reply():
         
 
 
-        lvl = 1
+        # lvl = 1
 
     return str(resp)
 
