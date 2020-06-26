@@ -49,6 +49,7 @@ def hello():
 def auth_page():
     global lvl
     global token
+    global api
     global auth
     global verifier
     token= request.args.get('oauth_token')
@@ -60,6 +61,12 @@ def auth_page():
 
         auth.get_access_token(verifier)
         lvl = 3
+        key = auth.access_token
+        secret = auth.access_token_secret
+
+        auth.set_access_token(key, secret)
+        api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
 
     except tweepy.TweepError:
         print('Error! Failed to get access token.')
@@ -73,10 +80,7 @@ def auth_page():
 
         # print("login:".format(login))
 
-    key = auth.access_token
-    secret = auth.access_token_secret
 
-    auth.set_access_token(key, secret)
 
 
 
@@ -259,7 +263,6 @@ def sms_reply():
     #     auth.set_access_token(key, secret)
 
     elif lvl == 3:
-        api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
         user = api.me()
         resp.message(
             "yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(user.name, user.screen_name,user.friends_count,user.followers_count))
