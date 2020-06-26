@@ -341,10 +341,10 @@ def sms_reply():
                             api.update_status(i)
 
 
-                    resp.message("done")
-                    sublvl = 0
-                    confirm = 0
-                    lvl = 3
+                resp.message("done")
+                sublvl = 0
+                confirm = 0
+                lvl = 3
 
 
 
