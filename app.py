@@ -50,7 +50,7 @@ def auth_page():
     global verifier
     token= request.args.get('oauth_token')
     verifier= request.args.get('oauth_verifier')
-    lvl=2
+
     auth.request_token = {'oauth_token': token,
                           'oauth_token_secret': verifier}
     try:
@@ -60,7 +60,7 @@ def auth_page():
 
     except tweepy.TweepError:
         print('Error! Failed to get access token.')
-        # lvl=0
+        lvl=0
 
         # lvl=0
         # lvl=0
