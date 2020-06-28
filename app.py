@@ -24,6 +24,7 @@ print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 # init = 0
 # sublvl = 0
 # # token=''
+lvl
 confirm = 0
 auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
@@ -104,7 +105,6 @@ def sms_reply():
     resp = MessagingResponse()
 
     print(request.form)
-    print("-------------------------------------------- >", lvl)
 
 
     msg = request.form.get('Body')
@@ -534,6 +534,7 @@ def sms_reply():
 
 
 
+    print("-------------------------------------------- >", lvl)
 
 
     return str(resp)
