@@ -16,14 +16,14 @@ from click._compat import raw_input
 app = Flask(__name__)
 app.secret_key = 'ayush'
 # num=0
-lvl = 0
+
 print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-ver = 0
-counter = 0
-login = 0
-init = 0
-sublvl = 0
-# token=''
+# ver = 0
+# counter = 0
+# login = 0
+# init = 0
+# sublvl = 0
+# # token=''
 confirm = 0
 auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
