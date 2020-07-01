@@ -152,6 +152,7 @@ def sms_reply():
     if msg == '**':
         print("deleting db")
         db.session.delete(row)
+        lvl=0
 
 
 
@@ -332,14 +333,14 @@ def sms_reply():
     #     else:
     #         resp.message("Wrong choice")
 
-
+    session['request_token']=auth.request_token
 
     if lvl == 0:
+        print("int 0")
 
         try:
             resp.message(" Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
 
-            session.set('request_token', auth.request_token)
 
             # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
         except:
@@ -365,7 +366,8 @@ def sms_reply():
 
     elif lvl==69:
         # if 'oauth_token' in session:
-        token = session.get('request_token')
+        token = session.get('request_token')['oauth_token']
+        print(token)
 
         verifier = msg
 
