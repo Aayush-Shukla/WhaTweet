@@ -48,7 +48,6 @@ class user_data(db.Model):
 
 
 # confirm = 0
-auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
 
 @app.route("/")
@@ -96,6 +95,8 @@ def hello():
 
 
 @app.route("/sms", methods=['POST'])
+auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
+
 def sms_reply():
     """Respond to incoming calls with a simple text message."""
 
@@ -110,7 +111,7 @@ def sms_reply():
 
     global api
     global request
-    global auth
+    # global auth
     global tweet
     global token
     zero=0
