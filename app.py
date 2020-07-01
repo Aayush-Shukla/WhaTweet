@@ -149,6 +149,8 @@ def sms_reply():
 
 
     msg = request.form.get('Body')
+    if msg == '**':
+        db.session.delete(row)
 
     # if init==0:
     #     user = api.me()
@@ -380,8 +382,7 @@ def sms_reply():
     elif lvl==1.1:
         # type(msg)
         print(msg)
-        if msg=='**':
-            db.session.delete(row)
+
         if msg=='1':
             resp.message("Type your tweet in (LIMIT : 1000 words)")
             lvl=1.2
