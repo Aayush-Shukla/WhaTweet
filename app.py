@@ -150,6 +150,7 @@ def sms_reply():
 
     msg = request.form.get('Body')
     if msg == '**':
+        print("deleting db")
         db.session.delete(row)
 
     # if init==0:
