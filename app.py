@@ -339,14 +339,15 @@ def sms_reply():
 
     if lvl == 0:
         print("int 0")
-
-        try:
-            resp.message(" Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
-
-
-            # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
-        except:
-            print("************************************************")
+        resp.message(
+            " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
+        #
+        # try:
+        #
+        #
+        #     # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
+        # except:
+        #     print("************************************************")
 
         lvl=69
 
