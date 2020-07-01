@@ -337,6 +337,9 @@ def sms_reply():
         try:
             resp.message(
                 " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
+            token = auth.request_token['oauth_token']
+
+
             # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
         except:
             print("************************************************")
@@ -360,28 +363,27 @@ def sms_reply():
 
 
     elif lvl==69:
-        if 'oauth_token' in session:
-            token = auth.request_token['oauth_token']
-            verifier = msg
+        # if 'oauth_token' in session:
+        verifier = msg
 
-            auth.request_token = {'oauth_token': token,
-                                  'oauth_token_secret': verifier}
-            try:
+        auth.request_token = {'oauth_token': token,
+                              'oauth_token_secret': verifier}
+        try:
 
-                auth.get_access_token(verifier)
-                lvl = 0.1
-                key = auth.access_token
-                secret = auth.access_token_secret
+            auth.get_access_token(verifier)
+            lvl = 0.1
+            key = auth.access_token
+            secret = auth.access_token_secret
 
-                auth.set_access_token(key, secret)
-                print(auth.set_access_token(key, secret))
+            auth.set_access_token(key, secret)
+            print(auth.set_access_token(key, secret))
 
-            except tweepy.TweepError:
-                print('Error! Failed to get access token.')
-                lvl = 0
-        else:
-            print("idk")
-            lvl=0
+        except tweepy.TweepError:
+            print('Error! Failed to get access token.')
+            lvl = 0
+        # else:
+        #     print("idk")
+        #     lvl=0
 
 
     elif lvl==1.1:
