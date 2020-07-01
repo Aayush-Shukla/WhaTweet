@@ -57,42 +57,42 @@ def hello():
 
 
 @app.route("/auth", methods=['GET'])
-def auth_page():
-    global lvl
-    global token
-    global api
-    global auth
-    global resp
-    global verifier
-    # api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
-    token = request.args.get('oauth_token')
-    verifier = request.args.get('oauth_verifier')
-
-    auth.request_token = {'oauth_token': token,
-                          'oauth_token_secret': verifier}
-    try:
-
-        auth.get_access_token(verifier)
-        lvl = 0.1
-        key = auth.access_token
-        secret = auth.access_token_secret
-
-        auth.set_access_token(key, secret)
-        api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
-
-    except tweepy.TweepError:
-        print('Error! Failed to get access token.')
-        lvl = 0
-
-    # user = api.me()
-    # resp.message(
-    #     "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
-    #         user.name, user.screen_name, user.friends_count, user.followers_count))
-    #
-    # lvl = 1.1
-    return "Hey"
+# def auth_page():
+#     global lvl
+#     global token
+#     global api
+#     global auth
+#     global resp
+#     global verifier
+#     # api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+#
+#     token = request.args.get('oauth_token')
+#     verifier = request.args.get('oauth_verifier')
+#
+#     auth.request_token = {'oauth_token': token,
+#                           'oauth_token_secret': verifier}
+#     try:
+#
+#         auth.get_access_token(verifier)
+#         lvl = 0.1
+#         key = auth.access_token
+#         secret = auth.access_token_secret
+#
+#         auth.set_access_token(key, secret)
+#         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+#
+#
+#     except tweepy.TweepError:
+#         print('Error! Failed to get access token.')
+#         lvl = 0
+#
+#     # user = api.me()
+#     # resp.message(
+#     #     "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
+#     #         user.name, user.screen_name, user.friends_count, user.followers_count))
+#     #
+#     # lvl = 1.1
+#     return "Hey"
 
 
 @app.route("/sms", methods=['POST'])
@@ -337,7 +337,6 @@ def sms_reply():
         try:
             resp.message(
                 " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
-            token = auth.request_token['oauth_token']
 
 
             # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
@@ -364,6 +363,8 @@ def sms_reply():
 
     elif lvl==69:
         # if 'oauth_token' in session:
+        token = auth.request_token['oauth_token']
+
         verifier = msg
 
         auth.request_token = {'oauth_token': token,
