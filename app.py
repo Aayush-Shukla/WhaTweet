@@ -3,6 +3,8 @@ import re
 import file as file
 from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
+from flask_sqlalchemy import SQLAlchemy
+
 
 import tweepy
 import os
@@ -14,6 +16,7 @@ import time
 from click._compat import raw_input
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_data.sqlite3'
 app.secret_key = 'ayush'
 # num=0
 
@@ -24,8 +27,19 @@ print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 # init = 0
 # sublvl = 0
 # # token=''
+db = SQLAlchemy(app)
+class user_data(db.Model):
+   id = db.Column('user_id', db.Integer, primary_key = True)
+   phno = db.Column(db.String(100))
+   lvl = db.Column(db.Integer)
 
-confirm = 0
+   def __init__(self, phno, lvl):
+       self.phno = phno
+       self.lvl = lvl
+
+
+
+# confirm = 0
 auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
 
@@ -42,6 +56,8 @@ def auth_page():
     global auth
     global resp
     global verifier
+    # api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
     token = request.args.get('oauth_token')
     verifier = request.args.get('oauth_verifier')
 
@@ -89,11 +105,28 @@ def sms_reply():
     global auth
     global tweet
     global token
-
+    zero=0
     global media
     global user
     global medianum
     global filename
+    froms =request.form.get('From')
+
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
+        print("yes")
+    else:
+        data = user_data(froms, zero)
+
+        db.session.add(data)
+        db.session.commit()
+        print("no")
+
+    row = user_data.query.filter_by(phno=request.form.get('From')).first()
+    lvl = row.lvl
+
+    print(lvl)
 
     filename = 'temp.jpg'
 
@@ -297,18 +330,50 @@ def sms_reply():
         except:
             print("************************************************")
 
+        lvl=69
+
+
 
     elif lvl ==0.1:
-        user = api.me()
-        resp.message(
-            "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
-                user.name, user.screen_name, user.friends_count, user.followers_count))
+        try:
+            user = api.me()
 
+            resp.message(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
+                    user.name, user.screen_name, user.friends_count, user.followers_count))
+
+
+        except:
+            db.session.delete(row)
         lvl=1.1
+
+
+    elif lvl==69:
+        token = auth.request_token['oauth_token']
+        verifier = msg
+
+        auth.request_token = {'oauth_token': token,
+                              'oauth_token_secret': verifier}
+        try:
+
+            auth.get_access_token(verifier)
+            lvl = 0.1
+            key = auth.access_token
+            secret = auth.access_token_secret
+
+            auth.set_access_token(key, secret)
+            print(auth.set_access_token(key, secret))
+
+        except tweepy.TweepError:
+            print('Error! Failed to get access token.')
+            lvl = 0
+
 
     elif lvl==1.1:
         # type(msg)
         print(msg)
+        if msg=='**':
+            db.session.delete(row)
         if msg=='1':
             resp.message("Type your tweet in (LIMIT : 1000 words)")
             lvl=1.2
@@ -537,10 +602,23 @@ def sms_reply():
     print("-------------------------------------------- >", lvl)
 
 
+
+
+
+    print("-------------------------------------------- >", lvl)
+    row.lvl =lvl
+    db.session.commit()
+    print("++++++++++++++++++++++++++++++++++++++++++++++ >", lvl)
+
+
+
+
     return str(resp)
 
 
 if __name__ == "__main__":
+    db.create_all()
+
     # print(
         # "55555555555555555555555555555555555555555555555starting555555555555555555555555555555555555555555555555555555555")
     app.run(debug=True)

@@ -3,6 +3,7 @@ import re
 import file as file
 from flask import Flask, request, session
 from twilio.twiml.messaging_response import MessagingResponse
+from flask_sqlalchemy import SQLAlchemy
 
 import tweepy
 import os
@@ -14,17 +15,37 @@ import time
 from click._compat import raw_input
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_data.sqlite3'
 app.secret_key = 'ayush'
 # num=0
-lvl = 0
-print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-ver = 0
-counter = 0
-login = 0
-init = 0
-sublvl = 0
-# token=''
-confirm = 0
+
+# print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+# ver = 0
+# counter = 0
+# login = 0
+# init = 0
+# sublvl = 0
+# # token=''
+# zero=0
+db = SQLAlchemy(app)
+class user_data(db.Model):
+   id = db.Column('user_id', db.Integer, primary_key = True)
+   phno = db.Column(db.String(100))
+   lvl = db.Column(db.Integer)
+
+   def __init__(self, phno, lvl):
+       self.phno = phno
+       self.lvl = lvl
+
+
+
+   # auth = db.Column(db.String(200))
+
+
+
+       # self.auth = auth
+
+
 auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
 
@@ -62,7 +83,7 @@ def auth_page():
         lvl = 0
 
     # user = api.me()
-    # resp.message(
+    # print(
     #     "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
     #         user.name, user.screen_name, user.friends_count, user.followers_count))
     #
@@ -72,7 +93,8 @@ def auth_page():
 
 @app.route("/sms", methods=['POST'])
 def sms_reply():
-    """Respond to incoming calls with a simple text message."""
+
+
 
     global lvl
     global ver
@@ -88,11 +110,42 @@ def sms_reply():
     global auth
     global tweet
     global token
-
+    zero=0
     global media
     global user
     global medianum
     global filename
+    froms =request.form.get('From')
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+    # print("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",request.form.get('From'))
+
+    if(user_data.query.filter_by(phno = request.form.get('From')).scalar()!=None):
+        print("yes")
+    else:
+        data = user_data(froms, zero)
+
+        db.session.add(data)
+        db.session.commit()
+        print("no")
+    # print(user_data.query(user_data.lvl).filter_by(phno = request.form.get('From')))
+    # print(db.session.query(user_data.lvl).filter(user_data.phno ==request.form.get('From')).all())
+
+    # row=db.session.query(user_data).filter(user_data.phno ==request.form.get('From')).all()
+
+    row=user_data.query.filter_by(phno = request.form.get('From')).first()
+    lvl=row.lvl
+
+    print(lvl)
+
+
+    # lvl=row[0][0]
+    # print(lvl)
+
+
+
+    """Respond to incoming calls with a simple text message."""
+
 
     filename = 'temp.jpg'
 
@@ -104,213 +157,62 @@ def sms_reply():
     resp = MessagingResponse()
 
     print(request.form)
-    print("-------------------------------------------- >", lvl)
 
 
     msg = request.form.get('Body')
 
-    # if init==0:
-    #     user = api.me()
-    #     resp.message(
-    #         "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
-    #             user.name, user.screen_name, user.friends_count, user.followers_count))
-    #
-    #     lvl = 1.1
-    #     init=1
-
-    #
-    # if lvl == 6:
-    #     print(api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following)
-    #
-    #     if (api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following):
-    #         api.destroy_friendship(msg)
-    #         resp.message('Unfollowed {}'.format(msg))
-    #     else:
-    #         api.create_friendship(msg)
-    #         resp.message('Followed {}'.format(msg))
-    #     lvl = 3
-    #
-    # elif lvl == 5:
-    #     media = request.form.get('MediaUrl0')
-    #     medianum = request.form.get('NumMedia')
-    #     if medianum != '0':
-    #         r = requests.get(media, stream=True)
-    #         if r.status_code == 200:
-    #             with open(filename, 'wb') as image:
-    #                 for chunk in r:
-    #                     image.write(chunk)
-    #
-    #         api.update_profile_image(filename)
-    #         resp.message("DONE !")
-    #     lvl = 3
-    #
-    #
-    # elif lvl == 3:
-    #     user = api.me()
-    #     resp.message(
-    #         "yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
-    #             user.name, user.screen_name, user.friends_count, user.followers_count))
-    #     lvl = 4
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    # elif lvl == 4:
-    #
-    #     if (sublvl == 1):
-    #         media = request.form.get('MediaUrl0')
-    #         medianum = request.form.get('NumMedia')
-    #
-    #         tweet = []
-    #         if (len(msg) < 280):
-    #             tweet.append(msg)
-    #         else:
-    #             count = 0
-    #             letter = 0
-    #             tweetno = len(msg) / 280
-    #             tweetno = (len(msg) + 2 * tweetno) // 280
-    #             tweetno = int(tweetno)
-    #
-    #             while (letter < len(msg)):
-    #                 # print(msg[letter:letter+274])
-    #                 tweet.append(msg[letter:letter + 274] + " ({}/{})".format(count + 1, tweetno + 1))
-    #                 count += 1
-    #                 letter = letter + 275
-    #                 # tweet[count]+=" ({}/{})".format(count+1,tweetno+1)
-    #
-    #         resp.message("You're going to make this/these tweet(s)\n------------------")
-    #         for i in tweet:
-    #             resp.message(i)
-    #             sublvl = 2
-    #     if (sublvl == 2):
-    #         if (confirm == 0):
-    #             resp.message("are you sure ? (y/n)?")
-    #             confirm = 1
-    #         else:
-    #
-    #             #
-    #
-    #             if (msg == 'y'):
-    #
-    #                 if (medianum != '0'):
-    #
-    #
-    #
-    #                     r = requests.get(media, stream=True)
-    #                     if r.status_code == 200:
-    #                         with open(filename, 'wb') as image:
-    #                             for chunk in r:
-    #                                 image.write(chunk)
-    #
-    #                 for i in tweet:
-    #
-    #
-    #
-    #                     if (medianum != '0'):
-    #
-    #                         api.update_with_media(filename, status=i)
-    #                     else:
-    #                         api.update_status(i)
-    #
-    #                 resp.message("done")
-    #                 sublvl = 0
-    #                 confirm = 0
-    #                 lvl = 3
-    #
-    #             if msg == 'n':
-    #                 resp.message("No changes made")
-    #                 sublvl = 0
-    #                 confirm = 0
-    #                 lvl = 3
-    #
-    #     if (msg == '1' and sublvl == 0):
-    #         resp.message("Type your tweet in (LIMIT : 1000 words)")
-    #         sublvl = 1
-    #
-    #     if (msg == '2' and sublvl == 0):
-    #         trending = api.trends_place(23424848)
-    #         trendss = ''
-    #
-    #         for i in range(20):
-    #             if trending[0]['trends'][i]['tweet_volume'] != None:
-    #                 trendss += "{}. {} ... ({})\n".format(i + 1, trending[0]['trends'][i]['name'],
-    #                                                       trending[0]['trends'][i]['tweet_volume'])
-    #             else:
-    #                 trendss += "{}. {} \n".format(i + 1, trending[0]['trends'][i]['name'])
-    #
-    #
-    #         resp.message("{}".format(trendss))
-    #         sublvl = 0
-    #         confirm = 0
-    #         lvl = 3
-    #
-    #     if (msg == '3' and sublvl == 0):
-    #         resp.message("Send a photo to update your Profile Picture")
-    #         lvl = 5
-    #
-    #     if (msg == '4' and sublvl == 0):
-    #         resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
-    #         lvl = 6
-    #
-    #     if (msg == '5' and sublvl == 0):
-    #         timeline = ''
-    #         timelinecount = 1
-    #         for tweet in api.user_timeline():
-    #
-    #             if tweet.in_reply_to_status_id == None:
-    #                 stringtoadd = "{}. {}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(
-    #                     timelinecount, tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"), tweet.retweet_count,
-    #                     tweet.retweeted_status.favorite_count if tweet.retweeted == True else tweet.favorite_count)
-    #
-    #                 x = re.findall(r'(https?://[^\s]+)', stringtoadd)
-    #                 print(x)
-    #                 if (len(x) != 0):
-    #                     stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
-    #
-    #                 if (len(timeline) + len(stringtoadd) > 1600):
-    #                     break
-    #                 timeline += stringtoadd
-    #                 timelinecount += 1
-    #         resp.message("{}".format(timeline))
-    #
-    #         lvl = 3
-    #
-    #
-    #     else:
-    #         resp.message("Wrong choice")
 
 
 
     if lvl == 0:
 
         try:
-            resp.message(
+            print(
                 " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
             # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
         except:
             print("************************************************")
 
+        lvl=69
+
+
+
+
+
 
     elif lvl ==0.1:
         user = api.me()
-        resp.message(
+        print(
             "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
 
         lvl=1.1
 
+    elif lvl==69:
+        token = auth.request_token['oauth_token']
+        verifier = msg
+
+        auth.request_token = {'oauth_token': token,
+                              'oauth_token_secret': verifier}
+        try:
+
+            auth.get_access_token(verifier)
+            lvl = 0.1
+            key = auth.access_token
+            secret = auth.access_token_secret
+
+            auth.set_access_token(key, secret)
+            print(auth.set_access_token(key, secret))
+
+        except tweepy.TweepError:
+            print('Error! Failed to get access token.')
+            lvl = 0
+
     elif lvl==1.1:
         # type(msg)
         print(msg)
         if msg=='1':
-            resp.message("Type your tweet in (LIMIT : 1000 words)")
+            print("Type your tweet in (LIMIT : 1000 words)")
             lvl=1.2
         if msg=='2':
             # print("into1,1")
@@ -324,17 +226,17 @@ def sms_reply():
                 else:
                     trendss += "{}. {} \n".format(i + 1, trending[0]['trends'][i]['name'])
 
-            resp.message("{}".format(trendss))
+            print("{}".format(trendss))
             lvl = 1
 
             # lvl=1.3
         if msg=='3':
-            resp.message("Send a photo to update your Profile Picture")
+            print("Send a photo to update your Profile Picture")
             lvl = 1.41
 
             # lvl=1.4
         if msg=='4':
-            resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
+            print("Enter the Twitter Handle of the user you want to follow/unfollow")
             lvl = 1.51
             # lvl=1.5
         if msg=='5':
@@ -356,7 +258,7 @@ def sms_reply():
                         break
                     timeline += stringtoadd
                     timelinecount += 1
-            resp.message("{}".format(timeline))
+            print("{}".format(timeline))
 
             lvl = 1
             # lvl=1.6
@@ -384,16 +286,16 @@ def sms_reply():
                 letter = letter + 275
                 # tweet[count]+=" ({}/{})".format(count+1,tweetno+1)
 
-        resp.message("You're going to make this/these tweet(s)\n------------------")
+        print("You're going to make this/these tweet(s)\n------------------")
         for i in tweet:
-            resp.message(i)
-        resp.message("are you sure ? (y/n)?")
+            print(i)
+        print("are you sure ? (y/n)?")
 
         lvl=1.22
 
     # elif lvl==1.21:
     #
-    #     resp.message("are you sure ? (y/n)?")
+    #     print("are you sure ? (y/n)?")
     #     lvl=1.22
 
     elif lvl==1.22:
@@ -418,11 +320,11 @@ def sms_reply():
                 else:
                     api.update_status(i)
 
-            resp.message("done")
+            print("done")
 
 
         if msg == 'n':
-            resp.message("No changes made")
+            print("No changes made")
 
         lvl=1
 
@@ -440,14 +342,14 @@ def sms_reply():
     #         else:
     #             trendss += "{}. {} \n".format(i + 1, trending[0]['trends'][i]['name'])
     #
-    #     resp.message("{}".format(trendss))
+    #     print("{}".format(trendss))
     #     lvl=0.1
 
 
 
 
     # elif lvl==1.4:
-    #     resp.message("Send a photo to update your Profile Picture")
+    #     print("Send a photo to update your Profile Picture")
     #     lvl = 1.41
 
 
@@ -463,11 +365,11 @@ def sms_reply():
                         image.write(chunk)
 
             api.update_profile_image(filename)
-            resp.message("DONE !")
+            print("DONE !")
 
 
         else:
-            resp.message("ERROR")
+            print("ERROR")
 
 
         lvl = 1
@@ -475,7 +377,7 @@ def sms_reply():
 
 
     # elif lvl==1.5:
-    #     resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
+    #     print("Enter the Twitter Handle of the user you want to follow/unfollow")
     #     lvl=1.51
 
 
@@ -485,10 +387,10 @@ def sms_reply():
 
         if (api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following):
             api.destroy_friendship(msg)
-            resp.message('Unfollowed {}'.format(msg))
+            print('Unfollowed {}'.format(msg))
         else:
             api.create_friendship(msg)
-            resp.message('Followed {}'.format(msg))
+            print('Followed {}'.format(msg))
         lvl = 1
 
 
@@ -511,7 +413,7 @@ def sms_reply():
     #                 break
     #             timeline += stringtoadd
     #             timelinecount += 1
-    #     resp.message("{}".format(timeline))
+    #     print("{}".format(timeline))
     #
     #     lvl = 0.1
 
@@ -521,7 +423,7 @@ def sms_reply():
 
     if lvl ==1:
         user = api.me()
-        resp.message(
+        print(
             "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
 
@@ -534,6 +436,11 @@ def sms_reply():
 
 
 
+    print("-------------------------------------------- >", lvl)
+    row.lvl =lvl
+    db.session.commit()
+    print("++++++++++++++++++++++++++++++++++++++++++++++ >", lvl)
+
 
 
     return str(resp)
@@ -542,4 +449,5 @@ def sms_reply():
 if __name__ == "__main__":
     # print(
         # "55555555555555555555555555555555555555555555555starting555555555555555555555555555555555555555555555555555555555")
+    db.create_all()
     app.run(debug=True)
