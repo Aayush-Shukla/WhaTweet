@@ -334,6 +334,8 @@ def sms_reply():
     #         resp.message("Wrong choice")
 
     session['request_token']=auth.request_token
+    print(auth.request_token,"000000000000000000000000000000000")
+    print(session['request_token'],"000000000000000000000000000000000")
 
     if lvl == 0:
         print("int 0")
