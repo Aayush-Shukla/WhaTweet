@@ -96,7 +96,6 @@ def hello():
 
 @app.route("/sms", methods=['POST'])
 def sms_reply():
-    auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
 
     """Respond to incoming calls with a simple text message."""
 
@@ -111,7 +110,9 @@ def sms_reply():
 
     global api
     global request
-    # global auth
+    global auth
+    auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
+
     global tweet
     global token
     zero=0
