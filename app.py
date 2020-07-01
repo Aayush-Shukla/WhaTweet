@@ -333,9 +333,9 @@ def sms_reply():
     #     else:
     #         resp.message("Wrong choice")
 
-    session['request_token']=auth.request_token
-    print(auth.request_token,"000000000000000000000000000000000")
-    print(session['request_token'],"000000000000000000000000000000000")
+    # session['request_token']=auth.request_token
+    # print(auth.request_token,"000000000000000000000000000000000")
+    # print(session['request_token'],"000000000000000000000000000000000")
 
     if lvl == 0:
         print("int 0")
@@ -368,7 +368,9 @@ def sms_reply():
 
     elif lvl==69:
         # if 'oauth_token' in session:
-        token = session.get('request_token')['oauth_token']
+        print(auth.request_token['oauth_token'], "000000000000000000000000000000000")
+
+        token = auth.request_token['oauth_token']
         print(token)
 
         verifier = msg
