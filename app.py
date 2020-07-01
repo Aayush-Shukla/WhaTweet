@@ -379,9 +379,9 @@ def sms_reply():
             except tweepy.TweepError:
                 print('Error! Failed to get access token.')
                 lvl = 0
-            else:
-                print("idk")
-                lvl=0
+        else:
+            print("idk")
+            lvl=0
 
 
     elif lvl==1.1:
