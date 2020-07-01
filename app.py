@@ -360,24 +360,28 @@ def sms_reply():
 
 
     elif lvl==69:
-        token = auth.request_token['oauth_token']
-        verifier = msg
+        if 'oauth_token' in session:
+            token = auth.request_token['oauth_token']
+            verifier = msg
 
-        auth.request_token = {'oauth_token': token,
-                              'oauth_token_secret': verifier}
-        try:
+            auth.request_token = {'oauth_token': token,
+                                  'oauth_token_secret': verifier}
+            try:
 
-            auth.get_access_token(verifier)
-            lvl = 0.1
-            key = auth.access_token
-            secret = auth.access_token_secret
+                auth.get_access_token(verifier)
+                lvl = 0.1
+                key = auth.access_token
+                secret = auth.access_token_secret
 
-            auth.set_access_token(key, secret)
-            print(auth.set_access_token(key, secret))
+                auth.set_access_token(key, secret)
+                print(auth.set_access_token(key, secret))
 
-        except tweepy.TweepError:
-            print('Error! Failed to get access token.')
-            lvl = 0
+            except tweepy.TweepError:
+                print('Error! Failed to get access token.')
+                lvl = 0
+            else:
+                print("idk")
+                lvl=0
 
 
     elif lvl==1.1:
