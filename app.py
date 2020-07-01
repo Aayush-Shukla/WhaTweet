@@ -374,6 +374,7 @@ def sms_reply():
         print(token)
 
         verifier = msg
+        print(verifier,"000000000000000000000000")
 
         auth.request_token = {'oauth_token': token,
                               'oauth_token_secret': verifier}
