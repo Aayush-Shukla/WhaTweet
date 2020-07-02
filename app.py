@@ -154,6 +154,13 @@ def sms_reply():
 
 
     msg = request.form.get('Body')
+
+    medianum = request.form.get('NumMedia')
+
+    if medianum!='0':
+        media = request.form.get('MediaUrl0')
+
+
     if msg == '**':
         print("deleting db")
         row.lvl = zero
@@ -469,8 +476,8 @@ def sms_reply():
 
 
     elif lvl==1.2:
-        media = request.form.get('MediaUrl0')
-        medianum = request.form.get('NumMedia')
+        # media = request.form.get('MediaUrl0')
+        # medianum = request.form.get('NumMedia')
 
         tweet = []
         if (len(msg) < 280):
@@ -500,11 +507,11 @@ def sms_reply():
     elif lvl==1.22:
 
         #
-        media = request.form.get('MediaUrl0')
-        medianum = request.form.get('NumMedia')
-        if (msg == 'y'):
 
-            if (medianum != '0'):
+        if (msg == 'y'):
+            # print(media)
+
+            if (media):
 
                 r = requests.get(media, stream=True)
                 if r.status_code == 200:
@@ -514,7 +521,7 @@ def sms_reply():
 
             for i in tweet:
 
-                if (medianum != '0'):
+                if (media):
 
                     api.update_with_media(filename, status=i)
                 else:
@@ -533,9 +540,8 @@ def sms_reply():
 
 
     elif lvl==1.41:
-        media = request.form.get('MediaUrl0')
-        medianum = request.form.get('NumMedia')
-        if medianum != '0':
+
+        if media:
             r = requests.get(media, stream=True)
             if r.status_code == 200:
                 with open(filename, 'wb') as image:
