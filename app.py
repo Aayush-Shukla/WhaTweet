@@ -356,13 +356,6 @@ def sms_reply():
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         row.authz = auth.request_token['oauth_token']
         db.session.commit()
-        #
-        # try:
-        #
-        #
-        #     # t.MediaUrl0=("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.HcQw5Zd1jJhmc1IYzADc3gHaHa%26pid%3DApi&f=1")
-        # except:
-        #     print("************************************************")
 
         lvl=69
 
