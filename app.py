@@ -38,12 +38,12 @@ class user_data(db.Model):
     id = db.Column('user_id', db.Integer, primary_key = True)
     phno = db.Column(db.String(100))
     lvl = db.Column(db.Integer)
-    auth=db.Column(db.String(100))
+    authz=db.Column(db.String(100))
 
-    def __init__(self, phno, lvl,auth):
+    def __init__(self, phno, lvl,authz):
         self.phno = phno
         self.lvl = lvl
-        self.auth=auth
+        self.authz=authz
 
 
 
@@ -123,7 +123,6 @@ def sms_reply():
     global filename
     froms =request.form.get('From')
 
-    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
         print("yes")
@@ -154,7 +153,8 @@ def sms_reply():
     msg = request.form.get('Body')
     if msg == '**':
         print("deleting db")
-        db.session.delete(row)
+        row.lvl = zero
+
         lvl=0
 
 
@@ -345,7 +345,7 @@ def sms_reply():
         print("int 0")
         resp.message(
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
-        row.auth = auth.request_token['oauth_token']
+        row.authz = auth.request_token['oauth_token']
         db.session.commit()
         #
         # try:
@@ -359,25 +359,13 @@ def sms_reply():
 
 
 
-    elif lvl ==0.1:
-        try:
-            user = api.me()
-
-            resp.message(
-                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
-                    user.name, user.screen_name, user.friends_count, user.followers_count))
-
-
-        except:
-            db.session.delete(row)
-        lvl=1.1
 
 
     elif lvl==69:
         # if 'oauth_token' in session:
-        print(row.auth, "000000000000000000000000000000000")
+        print(row.authz, "000000000000000000000000000000000")
 
-        token = row.auth
+        token = row.authz
         print(token)
 
         verifier = msg
@@ -394,6 +382,8 @@ def sms_reply():
 
             auth.set_access_token(key, secret)
             print(auth.set_access_token(key, secret))
+            api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
 
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
@@ -401,6 +391,23 @@ def sms_reply():
         # else:
         #     print("idk")
         #     lvl=0
+
+
+
+    if lvl ==0.1:
+        try:
+            user = api.me()
+
+            resp.message(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
+                    user.name, user.screen_name, user.friends_count, user.followers_count))
+
+
+        except:
+            db.session.delete(row)
+        lvl=1.1
+
+
 
 
     elif lvl==1.1:
