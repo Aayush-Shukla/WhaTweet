@@ -39,11 +39,15 @@ class user_data(db.Model):
     phno = db.Column(db.String(100))
     lvl = db.Column(db.Integer)
     authz=db.Column(db.String(100))
+    key=db.Column(db.String(100))
+    secret=db.Column(db.String(100))
 
-    def __init__(self, phno, lvl,authz):
+    def __init__(self, phno, lvl,authz,key,secret):
         self.phno = phno
         self.lvl = lvl
         self.authz=authz
+        self.key=key
+        self.secret=secret
 
 
 
@@ -113,7 +117,7 @@ def sms_reply():
     global request
     global auth
     auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
-    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+    # api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     global tweet
     global token
@@ -128,7 +132,7 @@ def sms_reply():
     if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
         print("yes")
     else:
-        data = user_data(froms, zero,zero)
+        data = user_data(froms, zero,zero,zero,zero)
 
         db.session.add(data)
         db.session.commit()
@@ -136,6 +140,10 @@ def sms_reply():
 
     row = user_data.query.filter_by(phno=request.form.get('From')).first()
     lvl = row.lvl
+
+    if row.key!=0 and row.secret!=0:
+        auth.set_access_token(row.key, row.secret)
+        api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     print(lvl)
 
@@ -383,6 +391,10 @@ def sms_reply():
 
             auth.set_access_token(key, secret)
             print(auth.set_access_token(key, secret))
+            row.key = key
+            row.secret = secret
+
+            db.session.commit()
             api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 
