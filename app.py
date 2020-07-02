@@ -496,15 +496,12 @@ def sms_reply():
 
         lvl=1.22
 
-    # elif lvl==1.21:
-    #
-    #     resp.message("are you sure ? (y/n)?")
-    #     lvl=1.22
 
     elif lvl==1.22:
 
         #
-
+        media = request.form.get('MediaUrl0')
+        medianum = request.form.get('NumMedia')
         if (msg == 'y'):
 
             if (medianum != '0'):
