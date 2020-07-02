@@ -109,10 +109,11 @@ def sms_reply():
     global confirm
     global verifier
 
-    global api
+
     global request
     global auth
     auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
+    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     global tweet
     global token
