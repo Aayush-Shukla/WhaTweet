@@ -341,6 +341,7 @@ def sms_reply():
 
     if lvl == 0:
         print("int 0")
+        print(auth)
         resp.message(
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         #
