@@ -17,22 +17,13 @@ engine = create_engine(
 import tweepy
 import os
 import requests
-import urllib.request
-import time
-from click._compat import raw_input
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user_data.sqlite3'
 app.secret_key = 'ayush'
-# num=0
 
-print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-# ver = 0
-# counter = 0
-# login = 0
-# init = 0
-# sublvl = 0
-# # token=''
+
 db = SQLAlchemy(app)
 class user_data(db.Model):
     id = db.Column('user_id', db.Integer, primary_key = True)
@@ -48,6 +39,9 @@ class user_data(db.Model):
         self.authz=authz
         self.key=key
         self.secret=secret
+db.create_all()
+db.session.commit()
+
 
 
 
@@ -540,28 +534,6 @@ def sms_reply():
 
 
 
-    # elif lvl==1.3:
-    #     trending = api.trends_place(23424848)
-    #     trendss = ''
-    #
-    #     for i in range(20):
-    #         if trending[0]['trends'][i]['tweet_volume'] != None:
-    #             trendss += "{}. {} ... ({})\n".format(i + 1, trending[0]['trends'][i]['name'],
-    #                                                   trending[0]['trends'][i]['tweet_volume'])
-    #         else:
-    #             trendss += "{}. {} \n".format(i + 1, trending[0]['trends'][i]['name'])
-    #
-    #     resp.message("{}".format(trendss))
-    #     lvl=0.1
-
-
-
-
-    # elif lvl==1.4:
-    #     resp.message("Send a photo to update your Profile Picture")
-    #     lvl = 1.41
-
-
 
     elif lvl==1.41:
         media = request.form.get('MediaUrl0')
@@ -585,10 +557,6 @@ def sms_reply():
 
 
 
-    # elif lvl==1.5:
-    #     resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
-    #     lvl=1.51
-
 
 
     elif lvl==1.51:
@@ -602,29 +570,6 @@ def sms_reply():
             resp.message('Followed {}'.format(msg))
         lvl = 1
 
-
-    # elif lvl==1.6:
-    #     timeline = ''
-    #     timelinecount = 1
-    #     for tweet in api.user_timeline():
-    #
-    #         if tweet.in_reply_to_status_id == None:
-    #             stringtoadd = "{}. {}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(
-    #                 timelinecount, tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"), tweet.retweet_count,
-    #                 tweet.retweeted_status.favorite_count if tweet.retweeted == True else tweet.favorite_count)
-    #
-    #             x = re.findall(r'(https?://[^\s]+)', stringtoadd)
-    #             print(x)
-    #             if (len(x) != 0):
-    #                 stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
-    #
-    #             if (len(timeline) + len(stringtoadd) > 1600):
-    #                 break
-    #             timeline += stringtoadd
-    #             timelinecount += 1
-    #     resp.message("{}".format(timeline))
-    #
-    #     lvl = 0.1
 
 
 
@@ -663,8 +608,7 @@ def sms_reply():
 
 
 if __name__ == "__main__":
-    db.create_all()
+    # print("created")
 
-    # print(
-        # "55555555555555555555555555555555555555555555555starting555555555555555555555555555555555555555555555555555555555")
+
     app.run(debug=True)
