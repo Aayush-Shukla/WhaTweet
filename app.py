@@ -338,10 +338,10 @@ def sms_reply():
     # session['request_token']=auth.request_token
     # print(auth.request_token,"000000000000000000000000000000000")
     # print(session['request_token'],"000000000000000000000000000000000")
+    print(auth)
 
     if lvl == 0:
         print("int 0")
-        print(auth())
         resp.message(
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         #
