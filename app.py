@@ -18,9 +18,7 @@ import tweepy
 import os
 import requests
 import urllib.request
-
 import time
-
 from click._compat import raw_input
 
 app = Flask(__name__)
@@ -37,13 +35,16 @@ print("changing lvl%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
 # # token=''
 db = SQLAlchemy(app)
 class user_data(db.Model):
-   id = db.Column('user_id', db.Integer, primary_key = True)
-   phno = db.Column(db.String(100))
-   lvl = db.Column(db.Integer)
+    id = db.Column('user_id', db.Integer, primary_key = True)
+    phno = db.Column(db.String(100))
+    lvl = db.Column(db.Integer)
+    auth=db.Column(db.String(100))
 
-   def __init__(self, phno, lvl):
-       self.phno = phno
-       self.lvl = lvl
+    def __init__(self, phno, lvl,auth):
+        self.phno = phno
+        self.lvl = lvl
+        self.auth=auth
+
 
 
 
@@ -127,7 +128,7 @@ def sms_reply():
     if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
         print("yes")
     else:
-        data = user_data(froms, zero)
+        data = user_data(froms, zero,zero)
 
         db.session.add(data)
         db.session.commit()
@@ -344,6 +345,8 @@ def sms_reply():
         print("int 0")
         resp.message(
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
+        row.auth = auth.request_token['oauth_token']
+        db.session.commit()
         #
         # try:
         #
@@ -372,9 +375,9 @@ def sms_reply():
 
     elif lvl==69:
         # if 'oauth_token' in session:
-        print(auth.request_token['oauth_token'], "000000000000000000000000000000000")
+        print(row.auth, "000000000000000000000000000000000")
 
-        token = auth.request_token['oauth_token']
+        token = row.auth
         print(token)
 
         verifier = msg
