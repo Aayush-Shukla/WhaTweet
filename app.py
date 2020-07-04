@@ -522,7 +522,7 @@ def sms_reply():
         if (msg == 'y'):
             # print(media)
 
-            if (media!=False):
+            if (media==False):
 
                 r = requests.get(media, stream=True)
                 if r.status_code == 200:
@@ -532,7 +532,7 @@ def sms_reply():
 
             for i in tweet:
 
-                if (media!=False):
+                if (media==False):
 
                     api.update_with_media(filename, status=i)
                 else:
@@ -552,7 +552,7 @@ def sms_reply():
 
     elif lvl==1.41:
 
-        if media!=False:
+        if media==False:
             r = requests.get(media, stream=True)
             if r.status_code == 200:
                 with open(filename, 'wb') as image:
