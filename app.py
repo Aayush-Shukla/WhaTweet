@@ -28,7 +28,7 @@ db = SQLAlchemy(app)
 class user_data(db.Model):
     id = db.Column('user_id', db.Integer, primary_key = True)
     phno = db.Column(db.String(100))
-    lvl = db.Column(db.Integer)
+    lvl = db.Column(db.Float)
     authz=db.Column(db.String(100))
     key=db.Column(db.String(100))
     secret=db.Column(db.String(100))
