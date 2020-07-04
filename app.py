@@ -166,7 +166,9 @@ def sms_reply():
 
     if msg == '**':
         print("deleting db")
-        row.lvl = zero
+
+        # row.lvl = zero
+        db.session.delete(row)
 
         lvl=0
 
