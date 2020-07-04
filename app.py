@@ -608,7 +608,14 @@ def sms_reply():
 
 
 
+    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
+        print("yes")
+    else:
+        data = user_data(froms, zero,zero,zero,zero)
 
+        db.session.add(data)
+        db.session.commit()
+        print("no")
 
     print("-------------------------------------------- >", lvl)
     row.lvl =lvl
