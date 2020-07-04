@@ -385,6 +385,7 @@ def sms_reply():
             lvl = 0.1
             key = auth.access_token
             secret = auth.access_token_secret
+            print("//////////////////////////////////////////////////////////////",key,secret)
 
             auth.set_access_token(key, secret)
             print(auth.set_access_token(key, secret))
