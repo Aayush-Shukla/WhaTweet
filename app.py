@@ -429,7 +429,8 @@ def sms_reply():
             resp.message("Type your tweet in (LIMIT : 1000 words)")
             lvl=1.2
         if msg==2:
-            # print("into1,1")
+            print("into1,1")
+
             trending = api.trends_place(23424848)
             trendss = ''
 
