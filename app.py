@@ -159,6 +159,8 @@ def sms_reply():
 
     if medianum!='0':
         media = request.form.get('MediaUrl0')
+    else:
+        media=False
 
 
     if msg == '**':
@@ -511,7 +513,7 @@ def sms_reply():
         if (msg == 'y'):
             # print(media)
 
-            if (media):
+            if (media!=False):
 
                 r = requests.get(media, stream=True)
                 if r.status_code == 200:
@@ -521,7 +523,7 @@ def sms_reply():
 
             for i in tweet:
 
-                if (media):
+                if (media!=False):
 
                     api.update_with_media(filename, status=i)
                 else:
@@ -541,7 +543,7 @@ def sms_reply():
 
     elif lvl==1.41:
 
-        if media:
+        if media!=False:
             r = requests.get(media, stream=True)
             if r.status_code == 200:
                 with open(filename, 'wb') as image:
