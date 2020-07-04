@@ -169,6 +169,10 @@ def sms_reply():
 
         # row.lvl = zero
         db.session.delete(row)
+        if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
+            print("yes")
+        else:
+            print("no")
 
         lvl=0
 
