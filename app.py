@@ -140,7 +140,7 @@ def sms_reply():
         auth.set_access_token(row.key, row.secret)
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
-    print(lvl)
+    print(">>>>>>>>>>.",lvl)
 
     filename = 'temp.jpg'
 
