@@ -20,7 +20,7 @@ import requests
 
 
 app = Flask(__name__)
-app.config['DATABASE_URL'] = 'postgres://xdqieazjvunfne:95c006314ec65cb73f0c7895ef905c64b6606932a7d13cbcab22cb7bdf7a0c0d@ec2-3-216-129-140.compute-1.amazonaws.com:5432/d3hdstc8500olp'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xdqieazjvunfne:95c006314ec65cb73f0c7895ef905c64b6606932a7d13cbcab22cb7bdf7a0c0d@ec2-3-216-129-140.compute-1.amazonaws.com:5432/d3hdstc8500olp'
 app.secret_key = 'ayush'
 
 
