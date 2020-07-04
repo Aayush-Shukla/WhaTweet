@@ -163,7 +163,8 @@ def sms_reply():
     else:
         media=False
 
-
+    if msg=='##':
+        lvl=1
     if msg == '**':
         print("deleting db")
 
