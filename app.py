@@ -133,7 +133,7 @@ def sms_reply():
         print("no")
 
     row = user_data.query.filter_by(phno=request.form.get('From')).first()
-    print("00000000000000000000000000000000000000000000000000000000000000000",row.all())
+    print("00000000000000000000000000000000000000000000000000000000000000000",row())
     lvl = row.lvl
 
     if row.key!=0 and row.secret!=0:
