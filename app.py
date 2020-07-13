@@ -519,7 +519,7 @@ def sms_reply():
     elif lvl==1.22:
 
         #
-
+        global tweet
         if (msg == 'y'):
             # print(media)
 
