@@ -160,8 +160,7 @@ def sms_reply():
 
     if medianum!='0':
         media = request.form.get('MediaUrl0')
-    else:
-        media=0
+
 
     if msg=='##':
         lvl=1
@@ -415,6 +414,7 @@ def sms_reply():
     if lvl ==0.1:
         try:
             user = api.me()
+            media=0
 
             resp.message(
                 "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
@@ -519,7 +519,7 @@ def sms_reply():
     elif lvl==1.22:
 
         #
-        global tweet
+        # global tweet
         if (msg == 'y'):
             # print(media)
 
@@ -595,6 +595,7 @@ def sms_reply():
         resp.message(
             "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
+        media=0
 
         lvl=1.1
 
