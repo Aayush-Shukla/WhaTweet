@@ -417,7 +417,7 @@ def sms_reply():
             media=0
 
             resp.message(
-                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies".format(
                     user.name, user.screen_name, user.friends_count, user.followers_count))
 
 
@@ -467,7 +467,7 @@ def sms_reply():
             for tweet in api.user_timeline():
 
                 if tweet.in_reply_to_status_id == None:
-                    stringtoadd = "{}. {}{}\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(
+                    stringtoadd = "{}. {} \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{}\n\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(
                         timelinecount, tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"), tweet.retweet_count,
                         tweet.retweeted_status.favorite_count if tweet.retweeted == True else tweet.favorite_count)
 
@@ -484,6 +484,33 @@ def sms_reply():
 
             lvl = 1
             # lvl=1.6
+
+        if msg=='6':
+            # print(api.user_timeline()[0].entities['user_mentions'][0]['screen_name'])
+            print(api.user_timeline()[0])
+            timeline = ''
+            timelinecount = 1
+            for tweet in api.user_timeline():
+
+                if tweet.in_reply_to_status_id != None:
+                    stringtoadd = "{}. Reply To  *@{}*({}) :\n {}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{}\n\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(timelinecount,tweet.entities['user_mentions'][0]['screen_name'],tweet.entities['user_mentions'][0]['name'],
+                         tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"), tweet.retweet_count,
+                        tweet.retweeted_status.favorite_count if tweet.retweeted == True else tweet.favorite_count)
+
+                    x = re.findall(r'(https?://[^\s]+)', stringtoadd)
+                    print(x)
+                    if (len(x) != 0):
+                        stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
+
+                    if (len(timeline) + len(stringtoadd) > 1600):
+                        break
+                    timeline += stringtoadd
+                    timelinecount += 1
+            resp.message("{}".format(timeline))
+
+            lvl = 1
+            # lvl=1.6
+
 
 
 
@@ -521,6 +548,7 @@ def sms_reply():
         #
         # global tweet
         if (msg == 'y'):
+            print(tweet)
             # print(media)
 
             if (media!=0):
@@ -593,7 +621,7 @@ def sms_reply():
     if lvl ==1:
         user = api.me()
         resp.message(
-            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets".format(
+            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
         media=0
 
