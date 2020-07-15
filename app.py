@@ -434,8 +434,9 @@ def sms_reply():
 
         if msg=='1':
             resp.message("Type your tweet in (LIMIT : 1000 words)")
+            media=0
             lvl=1.2
-        if msg=='2':
+        elif msg=='2':
             print("into1,1")
 
             trending = api.trends_place(23424848)
@@ -452,16 +453,16 @@ def sms_reply():
             lvl = 1
 
             # lvl=1.3
-        if msg=='3':
+        elif msg=='3':
             resp.message("Send a photo to update your Profile Picture")
             lvl = 1.41
 
             # lvl=1.4
-        if msg=='4':
+        elif msg=='4':
             resp.message("Enter the Twitter Handle of the user you want to follow/unfollow")
             lvl = 1.51
             # lvl=1.5
-        if msg=='5':
+        elif msg=='5':
             timeline = ''
             timelinecount = 1
             for tweet in api.user_timeline():
@@ -485,7 +486,7 @@ def sms_reply():
             lvl = 1
             # lvl=1.6
 
-        if msg=='6':
+        elif msg=='6':
             # print(api.user_timeline()[0].entities['user_mentions'][0]['screen_name'])
             print(api.user_timeline()[0])
             timeline = ''
@@ -510,6 +511,10 @@ def sms_reply():
 
             lvl = 1
             # lvl=1.6
+
+        else:
+            resp.message("*Wrong Choice Entered. Try again!*")
+            lvl=1
 
 
 
@@ -547,7 +552,7 @@ def sms_reply():
 
         #
         # global tweet
-        if (msg == 'y'):
+        if (msg.lower == 'y' or 'yes' or 'yeah'or 'yea'):
             print(tweet)
             # print(media)
 
