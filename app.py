@@ -190,6 +190,8 @@ def sms_reply():
 
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
+            resp.message("ErrOR! Send \'**\'")
+
             lvl = 0
 
 
@@ -201,7 +203,7 @@ def sms_reply():
             media=0
 
             resp.message(
-                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies\n\n\n\n(Send ## to show this message and send ** to logout.)".format(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies\n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
                     user.name, user.screen_name, user.friends_count, user.followers_count))
 
 
@@ -407,7 +409,7 @@ def sms_reply():
     if lvl ==1:
         user = api.me()
         resp.message(
-            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies\n\n\n\n(Send ## to show this message and send ** to logout.)".format(
+            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies\n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
         media=0
 
@@ -427,7 +429,7 @@ def sms_reply():
     if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
         print("yes")
     else:
-        data = user_data(froms, zero,zero,zero,zero)
+        data = user_data(froms, lvl,zero,zero,zero)
 
         db.session.add(data)
         db.session.commit()
