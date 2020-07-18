@@ -1,6 +1,6 @@
 # WhaTweet
 
-> A twitter bot for whatsapp built using python, tweepy and twilio
+A twitter bot for whatsapp built using python, tweepy and twilio
 
 
 
