@@ -6,6 +6,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.pool import StaticPool
+from utils import *
 
 engine = create_engine(
     "postgres://",
@@ -20,7 +21,7 @@ import requests
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xdqieazjvunfne:95c006314ec65cb73f0c7895ef905c64b6606932a7d13cbcab22cb7bdf7a0c0d@ec2-3-216-129-140.compute-1.amazonaws.com:5432/d3hdstc8500olp'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE
 app.secret_key = 'ayush'
 
 
@@ -110,7 +111,7 @@ def sms_reply():
 
     global request
     global auth
-    auth = tweepy.OAuthHandler('t5qZhGyVwTkNArktAPM64nSvl', 'lk2ViVadYV6JbyeY7KLRfcDSxV9aGdn9ez9pTTO8cylnO7Z16J')
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     # api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     global tweet
