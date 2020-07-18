@@ -120,11 +120,13 @@ def sms_reply():
 
 
     msg = request.form.get('Body')
+    print("xxxxxxxxx",lvl)
 
     medianum = request.form.get('NumMedia')
 
     if medianum!='0':
         media = request.form.get('MediaUrl0')
+
 
 
     if msg=='##':
@@ -134,10 +136,16 @@ def sms_reply():
 
 
         db.session.delete(row)
+        data = user_data(froms, zero, zero, zero, zero)
+
+        db.session.add(data)
+        db.session.commit()
+
         if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
             print("yes")
         else:
             print("no")
+
 
         lvl=0
 
@@ -146,11 +154,14 @@ def sms_reply():
 
     print(auth)
 
+
+
     if lvl == 0:
         print("int 0")
         resp.message(
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         row.authz = auth.request_token['oauth_token']
+        row.lvl=69
         db.session.commit()
 
         lvl=69
@@ -160,6 +171,7 @@ def sms_reply():
 
 
     elif lvl==69:
+        print("into 69")
 
         print(row.authz, "000000000000000000000000000000000")
 
@@ -180,7 +192,7 @@ def sms_reply():
             print("//////////////////////////////////////////////////////////////",key,secret)
 
             auth.set_access_token(key, secret)
-            print(auth.set_access_token(key, secret))
+            print(key, secret)
             row.key = key
             row.secret = secret
 
@@ -191,7 +203,6 @@ def sms_reply():
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
             resp.message("ErrOR! Send \'**\'")
-
             lvl = 0
 
 
@@ -426,14 +437,6 @@ def sms_reply():
 
 
 
-    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
-        print("yes")
-    else:
-        data = user_data(froms, lvl,zero,zero,zero)
-
-        db.session.add(data)
-        db.session.commit()
-        print("no")
 
     print("-------------------------------------------- >", lvl)
     row.lvl =lvl
