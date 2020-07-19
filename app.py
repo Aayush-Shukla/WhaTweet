@@ -63,7 +63,7 @@ def sms_reply():
 
 
 
-    global lvl
+    # global lvl
     global ver
     global counter
     global login
