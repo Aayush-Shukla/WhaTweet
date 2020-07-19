@@ -126,6 +126,14 @@ def sms_reply():
     if medianum!='0':
         media = request.form.get('MediaUrl0')
 
+    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
+        print("yes")
+    else:
+        data = user_data(froms, lvl, zero, zero, zero)
+
+        db.session.add(data)
+        db.session.commit()
+        print("no")
 
     if msg=='##':
         lvl=1
@@ -146,14 +154,7 @@ def sms_reply():
 
     print(auth)
 
-    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
-        print("yes")
-    else:
-        data = user_data(froms, lvl, zero, zero, zero)
 
-        db.session.add(data)
-        db.session.commit()
-        print("no")
 
     if lvl == 0:
         print("int 0")
