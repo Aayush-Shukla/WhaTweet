@@ -336,43 +336,66 @@ def sms_reply():
                 letter = letter + 275
 
 
-        resp.message("You're going to make this/these tweet(s)\n------------------")
+        resp.message("You made this/these tweet(s)\n------------------")
         for i in tweet:
             resp.message(i)
-        resp.message("are you sure ? (y/n)?")
 
-        lvl=1.22
+        if (media!=0):
 
+            r = requests.get(media, stream=True)
+            if r.status_code == 200:
+                with open(filename, 'wb') as image:
+                    for chunk in r:
+                        image.write(chunk)
 
-    elif lvl==1.22:
-
-        if (msg.lower == 'y' or 'yes' or 'yeah'or 'yea'):
-            print(tweet)
-
+        for i in tweet:
 
             if (media!=0):
 
-                r = requests.get(media, stream=True)
-                if r.status_code == 200:
-                    with open(filename, 'wb') as image:
-                        for chunk in r:
-                            image.write(chunk)
+                api.update_with_media(filename, status=i)
+            else:
+                api.update_status(i)
 
-            for i in tweet:
-
-                if (media!=0):
-
-                    api.update_with_media(filename, status=i)
-                else:
-                    api.update_status(i)
-
-            resp.message("done")
+        resp.message("done")
 
 
-        if msg == 'n':
-            resp.message("No changes made")
+
 
         lvl=1
+
+
+
+
+
+    # elif lvl==1.22:
+    #
+    #     if (msg.lower == 'y' or 'yes' or 'yeah'or 'yea'):
+    #         print(tweet)
+    #
+    #
+    #         if (media!=0):
+    #
+    #             r = requests.get(media, stream=True)
+    #             if r.status_code == 200:
+    #                 with open(filename, 'wb') as image:
+    #                     for chunk in r:
+    #                         image.write(chunk)
+    #
+    #         for i in tweet:
+    #
+    #             if (media!=0):
+    #
+    #                 api.update_with_media(filename, status=i)
+    #             else:
+    #                 api.update_status(i)
+    #
+    #         resp.message("done")
+    #
+    #
+    #     if msg == 'n':
+    #         resp.message("No changes made")
+    #
+    #     lvl=1
 
 
 
