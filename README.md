@@ -131,7 +131,9 @@ You will be prompted to activate your sandbox.
 
 - Can follow and unfollow users
 
-### License
+---
+
+## License
 
 Copyright © 2020, [Ayush Shukla](https://github.com/Aayush-Shukla).
 Released under the [MIT license](LICENSE).
