@@ -130,3 +130,15 @@ You will be prompted to activate your sandbox.
 - Shows users recent tweets and replies.
 
 - Can follow and unfollow users
+
+---
+
+## Contribute
+[Contributors Guide](https://github.com/Aayush-Shukla/WhaTweet/blob/master/CONTRIBUTING.md)
+
+---
+
+## License
+
+Copyright © 2020, [Ayush Shukla](https://github.com/Aayush-Shukla).
+Released under the [MIT license](LICENSE).
