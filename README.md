@@ -134,7 +134,7 @@ You will be prompted to activate your sandbox.
 ---
 
 ## Contribute
-[Contributors Guide](https://github.com/Aayush-Shukla/WhaTweet/CONTRIBUTING.md)
+[Contributors Guide](https://github.com/Aayush-Shukla/WhaTweet/blob/master/CONTRIBUTING.md)
 
 ---
 
