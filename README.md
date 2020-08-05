@@ -133,6 +133,11 @@ You will be prompted to activate your sandbox.
 
 ---
 
+## Contribute
+[Contributors Guide](https://github.com/Aayush-Shukla/WhaTweet/CONTRIBUTING.md)
+
+---
+
 ## License
 
 Copyright © 2020, [Ayush Shukla](https://github.com/Aayush-Shukla).
