@@ -216,7 +216,7 @@ def sms_reply():
             media=0
 
             resp.message(
-                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
                     user.name, user.screen_name, user.friends_count, user.followers_count))
 
 
@@ -346,12 +346,15 @@ def sms_reply():
 
                         # print(msg)
             # print(msgdict)
-            strin=''
+            strin='Select the chat by the number:\n\n'
+            counter=1
             for value in msgdict.values():
                 # print(value)
-                strin+=value[0]+"\n"
-                print(value[0])
+                strin+="{}. {}\n".format(counter,value[0])
+                counter+=1
+                # print(value[0])
 
+            print(strin)
             resp.message(strin)
             row.chatmsg=msgdict
             # print(msgs)
@@ -505,7 +508,7 @@ def sms_reply():
         # print(selected_chat[1:],"--------\n")
         # required=selected_chat[1:]
         # print(sorted(required,key=see))
-        chatarr+="\n\nSend texts to reply or \nSend '##' for Main Menu"
+        chatarr+="\n\n*Send texts to reply* or \n*Send '##' for Main Menu*"
         resp.message(chatarr)
         lvl=1.71
 
@@ -523,7 +526,7 @@ def sms_reply():
     if lvl ==1:
         user = api.me()
         resp.message(
-            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
+            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
         media=0
 
