@@ -31,13 +31,15 @@ class user_data(db.Model):
     phno = db.Column(db.String(100))
     lvl = db.Column(db.Float)
     authz=db.Column(db.String(100))
+    chatmsg=db.Column(db.JSON)
     key=db.Column(db.String(100))
     secret=db.Column(db.String(100))
 
-    def __init__(self, phno, lvl,authz,key,secret):
+    def __init__(self, phno, lvl,authz,chatmsg,key,secret):
         self.phno = phno
         self.lvl = lvl
         self.authz=authz
+        self.chatmsg=chatmsg
         self.key=key
         self.secret=secret
 db.create_all()
@@ -91,7 +93,7 @@ def sms_reply():
     if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
         print("yes")
     else:
-        data = user_data(froms, zero,zero,zero,zero)
+        data = user_data(froms, zero,zero,zero,zero,zero)
 
         db.session.add(data)
         db.session.commit()
@@ -136,7 +138,7 @@ def sms_reply():
 
 
         db.session.delete(row)
-        data = user_data(froms, zero, zero, zero, zero)
+        data = user_data(froms, zero, zero, zero, zero,zero)
 
         db.session.add(data)
         db.session.commit()
@@ -214,7 +216,7 @@ def sms_reply():
             media=0
 
             resp.message(
-                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies\n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
                     user.name, user.screen_name, user.friends_count, user.followers_count))
 
 
@@ -308,6 +310,53 @@ def sms_reply():
 
             lvl = 1
 
+        elif msg=='7':
+            user_id=api.me().id_str
+            msgs=api.list_direct_messages()
+            msgdict={}
+            for ms in msgs:
+
+                tempchat={'id':ms.id,'time':ms.created_timestamp,'from':api.get_user(ms.message_create['sender_id']).screen_name,'to':api.get_user(ms.message_create['target']['recipient_id']).screen_name,'text':ms.message_create['message_data']['text']}
+                if ms.message_create['target']['recipient_id']==user_id:
+
+                    if ms.message_create['sender_id'] in msgdict.keys():
+                        msgdict[ms.message_create['sender_id']].append(tempchat.copy())
+
+
+                    else:
+
+                        msgdict[ms.message_create['sender_id']]=[api.get_user(ms.message_create['sender_id']).screen_name]
+
+
+                        msgdict[ms.message_create['sender_id']].append(tempchat.copy())
+                        # msgdict[ms.message_create['sender_id']].insert(api.get_user(ms.message_create['sender_id']),-1)
+
+                else:
+                    if ms.message_create['target']['recipient_id'] in msgdict.keys():
+                        msgdict[ms.message_create['target']['recipient_id']].append(tempchat.copy())
+
+                    else:
+
+                        msgdict[ms.message_create['target']['recipient_id']] = [api.get_user(ms.message_create['target']['recipient_id']).screen_name]
+
+
+                        msgdict[ms.message_create['target']['recipient_id']].append(tempchat.copy())
+
+
+
+                        # print(msg)
+            # print(msgdict)
+            strin=''
+            for value in msgdict.values():
+                # print(value)
+                strin+=value[0]+"\n"
+                print(value[0])
+
+            resp.message(strin)
+            row.chatmsg=msgdict
+            # print(msgs)
+            # print(api.me().id_str)
+            lvl=1.7
 
         else:
             resp.message("*Wrong Choice Entered. Try again!*")
@@ -435,6 +484,37 @@ def sms_reply():
             resp.message('Followed {}'.format(msg))
         lvl = 1
 
+    elif lvl ==1.7:
+        msg=int(msg)
+        chatrow=row.chatmsg
+        chats=chatrow.values()
+        selected_chat=list(chats)[msg-1]
+        # if selected_chat[1]['from']
+        # fromid=
+        row.chatmsg=list(chatrow.keys())[msg-1]
+        chatarr=''
+        required = sorted(selected_chat[1:],key=see)
+        for text in required:
+            if text['from']==api.me().screen_name:
+                chatfrom='YOU'
+            else:
+                chatfrom=text['from']
+            print(text['time'])
+            # if isinstance(text,dict):
+            chatarr+="*{}* : {}\n".format(chatfrom.upper(),text['text'])
+        # print(selected_chat[1:],"--------\n")
+        # required=selected_chat[1:]
+        # print(sorted(required,key=see))
+        chatarr+="\n\nSend texts to reply or \nSend '##' for Main Menu"
+        resp.message(chatarr)
+        lvl=1.71
+
+    elif lvl==1.71:
+        sendto=row.chatmsg
+        api.send_direct_message(sendto,msg)
+
+
+
 
 
 
@@ -443,7 +523,7 @@ def sms_reply():
     if lvl ==1:
         user = api.me()
         resp.message(
-            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies\n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
+            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send ## to show this message \nand send ** to logout.)".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
         media=0
 
@@ -471,6 +551,11 @@ def sms_reply():
 
 
     return str(resp)
+
+
+def see(a):
+    # print(a,a['time'])
+    return int(a['time'])
 
 
 if __name__ == "__main__":
