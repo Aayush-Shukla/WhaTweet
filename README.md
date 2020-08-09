@@ -5,11 +5,11 @@ A twitter bot for whatsapp built using python, tweepy and twilio
 
 
 <p float="left">
-<img src="https://i.imgur.com/qXDnavE.png" width=30%>
+<img src="https://i.imgur.com/P5i2yXa.png" width=30%>
 
-<img src="https://i.imgur.com/ZaLd0yP.png" width=30%>
+<img src="https://i.imgur.com/SOMCSpQ.png" width=30%>
 
-<img src="https://i.imgur.com/Wv8mh8f.png" width=30%>
+<img src="https://i.imgur.com/PSzyn10.png" width=30%>
 </p>
 
 ---
@@ -119,17 +119,21 @@ You will be prompted to activate your sandbox.
 
 ## Features
 
-- Makes Tweet along with images and videos.
+- Login and logout
 
-- Tweets greater than 280 characters are automatically broken into smaller tweets.
+- Makes Tweet along with images and videos
+
+- Tweets greater than 280 characters are automatically broken into smaller tweets
 
 - Can update user's profile picture
 
-- Get trending twitter hastags.
+- Get trending twitter hastags
 
-- Shows users recent tweets and replies.
+- Shows user's recent tweets and replies
 
 - Can follow and unfollow users
+
+- Send/Receive Direct Messages
 
 ---
 
