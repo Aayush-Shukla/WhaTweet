@@ -1,12 +1,13 @@
 import re
-
-
-from flask import Flask, request, session
+from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.pool import StaticPool
 from utils import *
+import tweepy
+import os
+import requests
 
 engine = create_engine(
     "postgres://",
@@ -14,14 +15,10 @@ engine = create_engine(
     poolclass=StaticPool
 )
 
-
-import tweepy
-import os
-import requests
-
-
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE
+
 app.secret_key = 'ayush'
 
 
@@ -45,144 +42,67 @@ class user_data(db.Model):
 db.create_all()
 db.session.commit()
 
-
-
-
-
-
-
-
 @app.route("/")
 def hello():
     return "HI"
 
-
-
-
-
 @app.route("/sms", methods=['POST'])
 def sms_reply():
 
-
-
-    # global lvl
-    global ver
-    global counter
-    global login
-    global init
-    global sublvl
-    global confirm
-    global verifier
-
-
-    global request
-    global auth
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-
-
-    global tweet
-    global token
     zero=0
-    global media
-    global user
-    global medianum
-    global filename
     froms =request.form.get('From')
 
+    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() == None):
 
-    if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
-        print("yes")
-    else:
         data = user_data(froms, zero,zero,zero,zero,zero)
-
         db.session.add(data)
         db.session.commit()
-        print("no")
 
     row = user_data.query.filter_by(phno=request.form.get('From')).first()
-    print("00000000000000000000000000000000000000000000000000000000000000000",row.key,row.secret)
     lvl = row.lvl
 
     if row.key!=0 and row.secret!=0:
         auth.set_access_token(row.key, row.secret)
         api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
-    print(">>>>>>>>>>.",lvl,row.lvl)
-
     filename = 'temp.jpg'
-
-
 
     if (os.path.isfile(filename)):
         os.remove(filename)
 
     resp = MessagingResponse()
-
-    print(request.form)
-
-
     msg = request.form.get('Body')
-    print("xxxxxxxxx",lvl)
-
     medianum = request.form.get('NumMedia')
 
     if medianum!='0':
         media = request.form.get('MediaUrl0')
 
-
-
     if msg=='##':
         lvl=1
-    if msg == '**':
-        print("deleting db")
 
+    if msg == '**':
 
         db.session.delete(row)
         data = user_data(froms, zero, zero, zero, zero,zero)
-
         db.session.add(data)
         db.session.commit()
 
-        if (user_data.query.filter_by(phno=request.form.get('From')).scalar() != None):
-            print("yes")
-        else:
-            print("no")
-
-
         lvl=0
 
-
-
-
-    print(auth)
-
-
-
     if lvl == 0:
-        print("int 0")
+
         resp.message(
             " Hi there. Login to Twitter here. \n{} \n\n\nAnd send the code".format(auth.get_authorization_url()))
         row.authz = auth.request_token['oauth_token']
         row.lvl=69
         db.session.commit()
-
         lvl=69
 
-
-
-
-
     elif lvl==69:
-        print("into 69")
-
-        print(row.authz, "000000000000000000000000000000000")
 
         token = row.authz
-        print(token)
-
         verifier = msg
-        print(verifier,"000000000000000000000000")
-
         auth.request_token = {'oauth_token': token,
                               'oauth_token_secret': verifier}
         try:
@@ -191,16 +111,11 @@ def sms_reply():
             lvl = 0.1
             key = auth.access_token
             secret = auth.access_token_secret
-            print("//////////////////////////////////////////////////////////////",key,secret)
-
             auth.set_access_token(key, secret)
-            print(key, secret)
             row.key = key
             row.secret = secret
-
             db.session.commit()
             api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
 
         except tweepy.TweepError:
             print('Error! Failed to get access token.')
@@ -208,35 +123,27 @@ def sms_reply():
             lvl = 0
 
 
-
-
     if lvl ==0.1:
         try:
             user = api.me()
             media=0
-
             resp.message(
                 "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
                     user.name, user.screen_name, user.friends_count, user.followers_count))
-
 
         except:
             db.session.delete(row)
         lvl=1.1
 
-
-
-
     elif lvl==1.1:
-
-        print(msg)
 
         if msg=='1':
             resp.message("Type your tweet in (LIMIT : 1000 words)")
             media=0
             lvl=1.2
+
         elif msg=='2':
-            print("into1,1")
+
 
             trending = api.trends_place(23424848)
             trendss = ''
@@ -267,12 +174,12 @@ def sms_reply():
             for tweet in api.user_timeline():
 
                 if tweet.in_reply_to_status_id == None:
-                    stringtoadd = "{}. {} \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{}\n\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(
+                    stringtoadd = "{}. {} \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{}\n\n\t*🔃 : {}\t\t\t\t\t💟 : {}*\n\n------------------------------------\n\n".format(
                         timelinecount, tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"), tweet.retweet_count,
                         tweet.retweeted_status.favorite_count if tweet.retweeted == True else tweet.favorite_count)
 
                     x = re.findall(r'(https?://[^\s]+)', stringtoadd)
-                    print(x)
+
                     if (len(x) != 0):
                         stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
 
@@ -281,29 +188,28 @@ def sms_reply():
                     timeline += stringtoadd
                     timelinecount += 1
             resp.message("{}".format(timeline))
-
             lvl = 1
-
 
         elif msg=='6':
 
-            print(api.user_timeline()[0])
             timeline = ''
             timelinecount = 1
             for tweet in api.user_timeline():
 
                 if tweet.in_reply_to_status_id != None:
-                    stringtoadd = "{}. Reply To  *@{}*({}) :\n {}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{}\n\n\t*🔃 : {}\t💟 : {}*\n------------------------------------\n\n".format(timelinecount,tweet.entities['user_mentions'][0]['screen_name'],tweet.entities['user_mentions'][0]['name'],
+
+                    stringtoadd = "{}. Reply To  *@{}*({}) :\n {}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{}\n\n\t*🔃 : {}\t\t\t\t\t💟 : {}*\n\n------------------------------------\n\n".format(timelinecount,tweet.entities['user_mentions'][0]['screen_name'],tweet.entities['user_mentions'][0]['name'],
                          tweet.text, tweet.created_at.strftime("   (%b %d, %H:%M)"), tweet.retweet_count,
                         tweet.retweeted_status.favorite_count if tweet.retweeted == True else tweet.favorite_count)
-
                     x = re.findall(r'(https?://[^\s]+)', stringtoadd)
-                    print(x)
                     if (len(x) != 0):
+
                         stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
 
                     if (len(timeline) + len(stringtoadd) > 1600):
+
                         break
+
                     timeline += stringtoadd
                     timelinecount += 1
             resp.message("{}".format(timeline))
@@ -326,10 +232,7 @@ def sms_reply():
                     else:
 
                         msgdict[ms.message_create['sender_id']]=[api.get_user(ms.message_create['sender_id']).screen_name]
-
-
                         msgdict[ms.message_create['sender_id']].append(tempchat.copy())
-                        # msgdict[ms.message_create['sender_id']].insert(api.get_user(ms.message_create['sender_id']),-1)
 
                 else:
                     if ms.message_create['target']['recipient_id'] in msgdict.keys():
@@ -338,38 +241,25 @@ def sms_reply():
                     else:
 
                         msgdict[ms.message_create['target']['recipient_id']] = [api.get_user(ms.message_create['target']['recipient_id']).screen_name]
-
-
                         msgdict[ms.message_create['target']['recipient_id']].append(tempchat.copy())
 
-
-
-                        # print(msg)
-            # print(msgdict)
-            strin='Select the chat by the number:\n\n'
+            chatlist='Select the chat by the number:\n\n'
             counter=1
             for value in msgdict.values():
-                # print(value)
-                strin+="{}. {}\n".format(counter,value[0])
-                counter+=1
-                # print(value[0])
 
-            print(strin)
-            resp.message(strin)
+                chatlist+="{}. {}\n".format(counter,value[0])
+                counter+=1
+            resp.message(chatlist)
+            print(chatlist)
+
             row.chatmsg=msgdict
-            # print(msgs)
-            # print(api.me().id_str)
             lvl=1.7
 
         else:
             resp.message("*Wrong Choice Entered. Try again!*")
             lvl=1
 
-
-
-
     elif lvl==1.2:
-
 
         tweet = []
         if (len(msg) < 280):
@@ -388,7 +278,7 @@ def sms_reply():
                 letter = letter + 275
 
 
-        resp.message("You made this/these tweet(s)\n------------------")
+        resp.message("You made this/these tweet(s)\n----------------------------------------------")
         for i in tweet:
             resp.message(i)
 
@@ -408,50 +298,7 @@ def sms_reply():
             else:
                 api.update_status(i)
 
-        resp.message("done")
-
-
-
-
         lvl=1
-
-
-
-
-
-    # elif lvl==1.22:
-    #
-    #     if (msg.lower == 'y' or 'yes' or 'yeah'or 'yea'):
-    #         print(tweet)
-    #
-    #
-    #         if (media!=0):
-    #
-    #             r = requests.get(media, stream=True)
-    #             if r.status_code == 200:
-    #                 with open(filename, 'wb') as image:
-    #                     for chunk in r:
-    #                         image.write(chunk)
-    #
-    #         for i in tweet:
-    #
-    #             if (media!=0):
-    #
-    #                 api.update_with_media(filename, status=i)
-    #             else:
-    #                 api.update_status(i)
-    #
-    #         resp.message("done")
-    #
-    #
-    #     if msg == 'n':
-    #         resp.message("No changes made")
-    #
-    #     lvl=1
-
-
-
-
 
     elif lvl==1.41:
 
@@ -465,7 +312,6 @@ def sms_reply():
             api.update_profile_image(filename)
             resp.message("DONE !")
 
-
         else:
             resp.message("ERROR")
 
@@ -473,11 +319,7 @@ def sms_reply():
         lvl = 1
 
 
-
-
-
     elif lvl==1.51:
-        print(api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following)
 
         if (api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following):
             api.destroy_friendship(msg)
@@ -492,35 +334,25 @@ def sms_reply():
         chatrow=row.chatmsg
         chats=chatrow.values()
         selected_chat=list(chats)[msg-1]
-        # if selected_chat[1]['from']
-        # fromid=
         row.chatmsg=list(chatrow.keys())[msg-1]
         chatarr=''
-        required = sorted(selected_chat[1:],key=see)
+        required = sorted(selected_chat[1:],key=gettimestamp)
         for text in required:
             if text['from']==api.me().screen_name:
                 chatfrom='YOU'
             else:
                 chatfrom=text['from']
-            print(text['time'])
-            # if isinstance(text,dict):
+
             chatarr+="*{}* : {}\n".format(chatfrom.upper(),text['text'])
-        # print(selected_chat[1:],"--------\n")
-        # required=selected_chat[1:]
-        # print(sorted(required,key=see))
+
         chatarr+="\n\n*Send texts to reply* or \n*Send '##' for Main Menu*"
         resp.message(chatarr)
+
         lvl=1.71
 
     elif lvl==1.71:
         sendto=row.chatmsg
         api.send_direct_message(sendto,msg)
-
-
-
-
-
-
 
 
     if lvl ==1:
@@ -534,35 +366,19 @@ def sms_reply():
 
 
 
-
-
-
-
-
-    print("-------------------------------------------- >", lvl)
-
-
-
-
-    print("-------------------------------------------- >", lvl)
     row.lvl =lvl
-    print("**********************************",row.lvl)
+
     db.session.commit()
-    print("++++++++++++++++++++++++++++++++++++++++++++++ >", lvl)
-
-
-
 
     return str(resp)
 
 
-def see(a):
-    # print(a,a['time'])
-    return int(a['time'])
+def gettimestamp(chat):
+
+    return int(chat['time'])
 
 
 if __name__ == "__main__":
-
 
 
     app.run(debug=True)
