@@ -77,6 +77,8 @@ def sms_reply():
 
     if medianum!='0':
         media = request.form.get('MediaUrl0')
+    else:
+        media=0
 
     if msg=='##':
         lvl=1
@@ -320,6 +322,7 @@ def sms_reply():
 
 
     elif lvl==1.51:
+        user = api.me()
 
         if (api.show_friendship(source_screen_name=user.screen_name, target_screen_name=msg)[0].following):
             api.destroy_friendship(msg)
