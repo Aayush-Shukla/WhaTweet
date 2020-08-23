@@ -1,4 +1,6 @@
 import re
+import time
+from flask_apscheduler import APScheduler
 from flask import Flask, request
 from twilio.twiml.messaging_response import MessagingResponse
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +10,12 @@ from utils import *
 import tweepy
 import os
 import requests
+import datetime
+from twilio.rest import Client
+from dotenv import load_dotenv
+load_dotenv()
+
+
 
 engine = create_engine(
     "postgres://",
@@ -21,7 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE
 
 app.secret_key = 'ayush'
 
-
+scheduler=APScheduler()
 db = SQLAlchemy(app)
 class user_data(db.Model):
     id = db.Column('user_id', db.Integer, primary_key = True)
@@ -29,16 +37,18 @@ class user_data(db.Model):
     lvl = db.Column(db.Float)
     authz=db.Column(db.String(100))
     chatmsg=db.Column(db.JSON)
+    subscribe=db.Column(db.String(200))
     key=db.Column(db.String(100))
     secret=db.Column(db.String(100))
 
-    def __init__(self, phno, lvl,authz,chatmsg,key,secret):
+    def __init__(self, phno, lvl,authz,chatmsg,key,secret,subscribe):
         self.phno = phno
         self.lvl = lvl
         self.authz=authz
         self.chatmsg=chatmsg
         self.key=key
         self.secret=secret
+        self.subscribe=subscribe
 db.create_all()
 db.session.commit()
 
@@ -55,7 +65,7 @@ def sms_reply():
 
     if (user_data.query.filter_by(phno=request.form.get('From')).scalar() == None):
 
-        data = user_data(froms, zero,zero,zero,zero,zero)
+        data = user_data(froms, zero,zero,zero,zero,zero,zero)
         db.session.add(data)
         db.session.commit()
 
@@ -86,7 +96,7 @@ def sms_reply():
     if msg == '**':
 
         db.session.delete(row)
-        data = user_data(froms, zero, zero, zero, zero,zero)
+        data = user_data(froms, zero, zero, zero, zero,zero,zero)
         db.session.add(data)
         db.session.commit()
 
@@ -130,7 +140,7 @@ def sms_reply():
             user = api.me()
             media=0
             resp.message(
-                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
+                "Yo, *{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n 8. Subscribe to Hashtag  \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
                     user.name, user.screen_name, user.friends_count, user.followers_count))
 
         except:
@@ -185,10 +195,12 @@ def sms_reply():
                     if (len(x) != 0):
                         stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
 
-                    if (len(timeline) + len(stringtoadd) > 1600):
+                    if (len(timeline) + len(stringtoadd) > 1500):
                         break
                     timeline += stringtoadd
                     timelinecount += 1
+
+            print(timeline,len(timeline))
             resp.message("{}".format(timeline))
             lvl = 1
 
@@ -208,7 +220,7 @@ def sms_reply():
 
                         stringtoadd = stringtoadd.replace(x[0], "\n{}".format(x[0]))
 
-                    if (len(timeline) + len(stringtoadd) > 1600):
+                    if (len(timeline) + len(stringtoadd) > 1500):
 
                         break
 
@@ -256,6 +268,12 @@ def sms_reply():
 
             row.chatmsg=msgdict
             lvl=1.7
+
+
+        elif msg=='8':
+            resp.message("Enter the HASHTAG you want to subscribe to:")
+            lvl=1.8
+
 
         else:
             resp.message("*Wrong Choice Entered. Try again!*")
@@ -357,11 +375,33 @@ def sms_reply():
         sendto=row.chatmsg
         api.send_direct_message(sendto,msg)
 
+    elif lvl ==1.8:
+        tempjson=row.subscribe
+        print(type(tempjson))
+        if tempjson==0 or tempjson =='0':
+            tempjson=""
+
+        tempjson=tempjson.split()
+        # print(tempjson.split())
+        if(msg in tempjson):
+            tempjson.remove(msg)
+            resp.message("Unsubscribed *{}*".format(msg))
+
+        else:
+            tempjson.append(msg)
+            print(tempjson," ".join(tempjson))
+
+            resp.message("Subscribed *{}*".format(msg))
+
+        row.subscribe = ' '.join(tempjson)
+
+        lvl=1
+
 
     if lvl ==1:
         user = api.me()
         resp.message(
-            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
+            "*{}* (```{}```)\n----------------------------------------------\n```{}``` Following | ```{}``` Followers\n----------------------------------------------\n\n What would you like to do? \n\n 1. Make Tweet\n 2. Trending\n 3. Update Profile Picture\n 4. Follow/Unfollow by twitter handle \n 5. View your recent tweets \n 6. View your recent replies \n 7. Recent DMs \n 8. Subscribe to Hashtag \n\n\n\n(Send '##' to show this message or\nSend '**' to logout.)".format(
                 user.name, user.screen_name, user.friends_count, user.followers_count))
         media=0
 
@@ -381,7 +421,42 @@ def gettimestamp(chat):
     return int(chat['time'])
 
 
+def retweeter():
+    print("retweeter running")
+
+
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+    api = tweepy.API(auth)
+
+    client = Client(account_sid, auth_token)
+
+
+    users=user_data.query.all()
+    for user in users:
+        tags=user.subscribe.split()
+        for tag in tags:
+            for tweet in tweepy.Cursor(api.search, q='{} -filter:retweets'.format(tag), result_type='recent', rpp=100,tweet_mode='extended').items(3):
+                print(tweet.user.screen_name,tweet.user.name)
+
+                if tweet.created_at+datetime.timedelta(seconds=120)>datetime.datetime.utcnow()-datetime.timedelta(hours=5, minutes=30):
+                    message = client.messages.create(
+                        from_='whatsapp:+14155238886',
+                        body="*{}* ({}):\n\n{}".format(tweet.user.screen_name,tweet.user.name,tweet.full_text),
+                        to=user.phno
+                    )
+
+                    print(message)
+
+
+
 if __name__ == "__main__":
 
 
-    app.run(debug=True)
+
+    # retweeter()
+    scheduler.add_job(id="scheduled",func=retweeter,trigger='interval',seconds=120)
+    scheduler.start()
+    app.run(debug=False)
+
+

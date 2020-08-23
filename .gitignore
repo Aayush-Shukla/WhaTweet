@@ -1,3 +1,5 @@
 myvenv/
 *.pyc
 .idea/
+.env
+TEST.py
