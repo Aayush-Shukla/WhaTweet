@@ -2,10 +2,10 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-CONSUMER_KEY = os.getenv('CONSUMER_KEY')
-CONSUMER_SECRET = os.getenv('CONSUMER_SECRET')
-DATABASE = os.getenv('DATABASE')
-ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
-ACCESS_TOKEN_SECRET = os.getenv('ACCESS_TOKEN_SECRET')
-account_sid = os.getenv('account_sid')
-auth_token = os.getenv('auth_token')
+CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
+CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
+DATABASE = os.environ.get('DATABASE')
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
+ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
+ACCOUNT_SID = os.environ.get('account_sid')
+AUTH_TOKEN = os.environ.get('auth_token')
