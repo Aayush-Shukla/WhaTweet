@@ -421,32 +421,32 @@ def gettimestamp(chat):
     return int(chat['time'])
 
 
-def retweeter():
-    print("retweeter running")
-
-
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
-
-    client = Client(ACCOUNT_SID, AUTH_TOKEN)
-
-
-    users=user_data.query.all()
-    for user in users:
-        tags=user.subscribe.split()
-        for tag in tags:
-            for tweet in tweepy.Cursor(api.search, q='{} -filter:retweets'.format(tag), result_type='recent', rpp=100,tweet_mode='extended').items(3):
-                print(tweet.user.screen_name,tweet.user.name)
-
-                if tweet.created_at+datetime.timedelta(seconds=120)>datetime.datetime.utcnow()-datetime.timedelta(hours=5, minutes=30):
-                    message = client.messages.create(
-                        from_='whatsapp:+14155238886',
-                        body="*{}* ({}):\n\n{}".format(tweet.user.screen_name,tweet.user.name,tweet.full_text),
-                        to=user.phno
-                    )
-
-                    print(message)
+# def retweeter():
+#     print("retweeter running")
+#
+#
+#     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+#     auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+#     api = tweepy.API(auth)
+#
+#     client = Client(ACCOUNT_SID, AUTH_TOKEN)
+#
+#
+#     users=user_data.query.all()
+#     for user in users:
+#         tags=user.subscribe.split()
+#         for tag in tags:
+#             for tweet in tweepy.Cursor(api.search, q='{} -filter:retweets'.format(tag), result_type='recent', rpp=100,tweet_mode='extended').items(3):
+#                 print(tweet.user.screen_name,tweet.user.name)
+#
+#                 if tweet.created_at+datetime.timedelta(seconds=120)>datetime.datetime.utcnow()-datetime.timedelta(hours=5, minutes=30):
+#                     message = client.messages.create(
+#                         from_='whatsapp:+14155238886',
+#                         body="*{}* ({}):\n\n{}".format(tweet.user.screen_name,tweet.user.name,tweet.full_text),
+#                         to=user.phno
+#                     )
+#
+#                     print(message)
 
 
 
@@ -455,8 +455,8 @@ if __name__ == "__main__":
 
 
     # retweeter()
-    scheduler.add_job(id="scheduled",func=retweeter,trigger='interval',seconds=120)
-    scheduler.start()
+    # scheduler.add_job(id="scheduled",func=retweeter,trigger='interval',seconds=120)
+    # scheduler.start()
     app.run(debug=False)
 
 
