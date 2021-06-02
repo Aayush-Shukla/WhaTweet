@@ -46,5 +46,5 @@ toml==0.10.1
 tweepy==3.8.0
 twilio==6.42.0
 tzlocal==2.1
-urllib3==1.25.9
+urllib3==1.26.5
 Werkzeug==1.0.1
