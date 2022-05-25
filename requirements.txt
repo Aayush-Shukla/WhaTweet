@@ -28,7 +28,7 @@ psutil==5.7.2
 psycopg2-binary==2.8.5
 py==1.9.0
 pycparser==2.20
-PyJWT==1.7.1
+PyJWT==2.4.0
 pymongo==3.10.1
 pyparsing==2.4.7
 PySocks==1.7.1
